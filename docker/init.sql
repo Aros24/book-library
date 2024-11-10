@@ -4,7 +4,7 @@ CREATE TABLE user (
                       first_name VARCHAR(255) NOT NULL,
                       last_name VARCHAR(255) NOT NULL,
                       email VARCHAR(255) NOT NULL UNIQUE,
-					  password VARCHAR(50) NOT NULL,
+					  password VARCHAR(255) NOT NULL,
                       role VARCHAR(50) DEFAULT 'basic',
                       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
