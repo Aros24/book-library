@@ -7,13 +7,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
 @Data
 @NoArgsConstructor
@@ -28,7 +29,7 @@ public class User {
     private Integer id;
 
     @Column(name = "public_id", nullable = false, unique = true, updatable = false)
-    private String publicId = UUID.randomUUID().toString();
+    private String publicId;
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
@@ -39,18 +40,18 @@ public class User {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password", nullable = false, length = 50)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "role", nullable = false, length = 50)
-    private String role = "basic";  // Default role is 'basic'
+    private String role;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
+        createdAt = ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime();
     }
 
 }
