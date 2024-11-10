@@ -26,8 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth/v1")
 public class AuthController {
-
-    private final String TAG = "/auth/v1";
+    
     private final AuthService authService;
     private final JwtUtil jwtUtil;
 
