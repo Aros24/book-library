@@ -52,17 +52,18 @@ public class UserService {
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent()) {
             User dbUser = user.get();
-            return UserDto.builder()
-                    .publicId(dbUser.getPublicId())
-                    .firstName(dbUser.getFirstName())
-                    .lastName(dbUser.getLastName())
-                    .email(dbUser.getEmail())
-                    .password(dbUser.getPassword())
-                    .role(dbUser.getRole())
-                    .build();
+            return buildUser(dbUser);
         }
-
         throw new ResourceNotFoundException("Failed to obtain user by email");
+    }
+
+    public UserDto getUserByPublicId(String publicId) {
+        Optional<User> user = userRepository.getByPublicId(publicId);
+        if (user.isPresent()) {
+            User dbUser = user.get();
+            return buildUser(dbUser);
+        }
+        throw new ResourceNotFoundException("Failed to obtain user by publicId");
     }
 
     private boolean checkIfUserExists(String email) {
@@ -71,6 +72,17 @@ public class UserService {
 
     private String generateRandomUUID() {
         return UUID.randomUUID().toString(); // length = 36
+    }
+
+    private UserDto buildUser(User user) {
+        return UserDto.builder()
+                .publicId(user.getPublicId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .role(user.getRole())
+                .build();
     }
 
 }
