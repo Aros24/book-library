@@ -1,7 +1,5 @@
 package com.bookrental.security;
 
-import com.bookrental.config.exceptions.ForbiddenException;
-import com.bookrental.config.exceptions.UnauthorizedException;
 import com.bookrental.security.filters.JwtAuthenticationFilter;
 import com.bookrental.security.filters.PublicIdCheckFilter;
 import org.springframework.beans.factory.annotation.Autowired;

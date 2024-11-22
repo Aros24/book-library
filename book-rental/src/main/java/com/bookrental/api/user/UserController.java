@@ -2,9 +2,6 @@ package com.bookrental.api.user;
 
 import com.bookrental.api.user.response.GetUserResponse;
 import com.bookrental.config.exceptions.ErrorResponse;
-import com.bookrental.config.exceptions.ResourceNotFoundException;
-import com.bookrental.persistence.entity.User;
-import com.bookrental.persistence.repositories.UserRepository;
 import com.bookrental.service.user.UserDto;
 import com.bookrental.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,13 +11,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
 
 @Tag(name = "User", description = "User related endpoints")
 @RestController
