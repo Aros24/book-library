@@ -29,7 +29,7 @@ public class Rent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "public_id", nullable = false, unique = true, updatable = false)
     private String publicId;
