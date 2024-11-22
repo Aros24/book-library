@@ -3,17 +3,14 @@ package com.bookrental.service.user;
 import com.bookrental.api.user.request.GetUserAccountParams;
 import com.bookrental.config.exceptions.BadRequestException;
 import com.bookrental.config.exceptions.ResourceNotFoundException;
+import com.bookrental.persistence.PersistenceUtil;
 import com.bookrental.persistence.entity.User;
 import com.bookrental.persistence.repositories.UserRepository;
-import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,10 +19,12 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PersistenceUtil persistenceUtil;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PersistenceUtil persistenceUtil) {
         this.userRepository = userRepository;
+        this.persistenceUtil = persistenceUtil;
     }
 
     public UserDto createUser(UserDto userDto) {
@@ -75,8 +74,8 @@ public class UserService {
     }
 
     public List<UserDto> getUsers(GetUserAccountParams params) {
-        Pageable pageable = buildPageable(params);
-        Specification<User> specification = buildSpecification(params);
+        Pageable pageable = persistenceUtil.buildPageable(params.getSize(), params.getPage(), params.getOrderBy(), params.getOrderDirection());
+        Specification<User> specification = persistenceUtil.buildUserListSpecification(params);
 
         List<UserDto> userDtoList = userRepository.findAll(specification, pageable).stream()
                 .map(this::buildUser)
@@ -107,42 +106,6 @@ public class UserService {
                 .role(user.getRole())
                 .deleted(user.getDeleted())
                 .build();
-    }
-
-    private Pageable buildPageable(GetUserAccountParams params) {
-        if (params.getSize() == null || params.getSize() < 1) {
-            throw new BadRequestException("Invalid size");
-        }
-        if (params.getPage() == null || params.getPage() < 0) {
-            throw new BadRequestException("Invalid page number");
-        }
-        String orderBy = params.getOrderBy() != null ? params.getOrderBy() : "id";
-        Sort.Direction direction = "desc".equalsIgnoreCase(params.getOrderDirection()) ? Sort.Direction.DESC : Sort.Direction.ASC;
-        return PageRequest.of(params.getPage(), params.getSize(), Sort.by(direction, orderBy));
-    }
-
-    private Specification<User> buildSpecification(GetUserAccountParams params) {
-        return (root, query, cb) -> {
-            var predicates = new ArrayList<>();
-
-            if (params.getFirstName() != null) {
-                predicates.add(cb.like(root.get("firstName"), "%" + params.getFirstName() + "%"));
-            }
-            if (params.getLastName() != null) {
-                predicates.add(cb.like(root.get("lastName"), "%" + params.getLastName()+ "%"));
-            }
-            if (params.getEmail() != null) {
-                predicates.add(cb.like(root.get("email"), "%" + params.getEmail() + "%"));
-            }
-            if (params.getRole() != null) {
-                predicates.add(cb.equal(root.get("role"), params.getRole()));
-            }
-            if (params.getDeleted() != null) {
-                predicates.add(cb.equal(root.get("deleted"), params.getDeleted()));
-            }
-
-            return cb.and(predicates.toArray(new Predicate[0]));
-        };
     }
 
 }

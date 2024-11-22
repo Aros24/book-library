@@ -1,7 +1,6 @@
 package com.bookrental.security.filters;
 
 import com.bookrental.config.exceptions.ForbiddenException;
-import com.bookrental.persistence.repositories.UserRepository;
 import com.bookrental.security.SecurityConstants;
 import com.bookrental.security.jwt.JwtAuthenticationToken;
 import com.bookrental.security.jwt.JwtUtil;
