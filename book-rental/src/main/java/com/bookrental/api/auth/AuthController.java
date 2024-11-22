@@ -4,9 +4,10 @@ import com.bookrental.api.auth.request.LoginRequest;
 import com.bookrental.api.auth.request.RegisterRequest;
 import com.bookrental.api.auth.response.AuthResponse;
 import com.bookrental.config.exceptions.ErrorResponse;
+import com.bookrental.config.exceptions.ForbiddenException;
 import com.bookrental.security.SecurityConstants;
-import com.bookrental.security.jwt.JwtUtil;
 import com.bookrental.service.auth.AuthService;
+import com.bookrental.service.auth.LoginDto;
 import com.bookrental.service.user.UserDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -29,12 +30,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
-    private final JwtUtil jwtUtil;
 
     @Autowired
-    public AuthController(AuthService authService, JwtUtil jwtUtil) {
+    public AuthController(AuthService authService) {
         this.authService = authService;
-        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/register")
@@ -50,7 +49,6 @@ public class AuthController {
         UserDto user = authService.registerUser(request);
         return AuthResponse.builder()
                 .userPublicId(user.getPublicId())
-                .role(user.getRole())
                 .build();
     }
 
@@ -63,12 +61,13 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "User successfully logged in", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthResponse.class))),
             @ApiResponse(responseCode = "400", description = "Bad request, invalid credentials", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
     })
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
-        String jwt = authService.loginUser(request);
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) throws ForbiddenException {
+        LoginDto login = authService.loginUser(request);
         return ResponseEntity.ok()
-                .header(HttpHeaders.AUTHORIZATION, SecurityConstants.BEARER.getValue() + jwt)
+                .header(HttpHeaders.AUTHORIZATION, SecurityConstants.BEARER.getValue() + login.getJwt())
                 .body(AuthResponse.builder()
-                        .userPublicId(jwtUtil.extractPublicIdFromRawToken(jwt))
+                        .userPublicId(login.getPublicId())
+                        .role(login.getRole())
                         .build());
     }
 
