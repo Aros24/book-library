@@ -26,4 +26,7 @@ public class GetUserResponse {
     @Schema(description = "Role of the user (e.g., admin, basic)", example = "basic")
     String role;
 
+    @Schema(description = "Is user deleted")
+    boolean deleted;
+
 }

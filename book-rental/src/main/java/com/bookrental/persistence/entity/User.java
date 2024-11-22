@@ -50,6 +50,9 @@ public class User {
     @Column(name = "role", nullable = false, length = 50)
     private String role;
 
+    @Column(name = "deleted", nullable = false)
+    private Boolean deleted;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

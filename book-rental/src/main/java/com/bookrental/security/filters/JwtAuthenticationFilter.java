@@ -1,9 +1,12 @@
 package com.bookrental.security.filters;
 
+import com.bookrental.config.exceptions.ForbiddenException;
 import com.bookrental.persistence.repositories.UserRepository;
 import com.bookrental.security.SecurityConstants;
 import com.bookrental.security.jwt.JwtAuthenticationToken;
 import com.bookrental.security.jwt.JwtUtil;
+import com.bookrental.service.user.UserDto;
+import com.bookrental.service.user.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,12 +24,12 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Autowired
-    public JwtAuthenticationFilter(JwtUtil jwtUtil, UserRepository userRepository) {
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, UserService userService) {
         this.jwtUtil = jwtUtil;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -38,13 +41,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (token != null && jwtUtil.validateRawToken(token)) {
                 String email = jwtUtil.extractEmailFromRawToken(token);
                 String publicId = jwtUtil.extractPublicIdFromRawToken(token);
-                String role = userRepository.getRoleByEmail(email);
+                UserDto user = userService.getUserByPublicId(publicId);
 
+                if (user.isDeleted()) {
+                    throw new ForbiddenException("Account has been deleted");
+                }
                 if (jwtUtil.isTokenExpiringSoon(token)) {
                     token = jwtUtil.generateToken(email, publicId);
                 }
 
-                Authentication authentication = new JwtAuthenticationToken(email, role, publicId);
+                Authentication authentication = new JwtAuthenticationToken(email, user.getRole(), publicId);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 response.setHeader(SecurityConstants.AUTHORIZATION.getValue(), SecurityConstants.BEARER.getValue() + token);
             }

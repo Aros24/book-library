@@ -36,6 +36,7 @@ public class UserService {
                 .email(userDto.getEmail())
                 .password(userDto.getPassword())
                 .role(userDto.getRole())
+                .deleted(false)
                 .build();
 
         try {
@@ -82,6 +83,7 @@ public class UserService {
                 .email(user.getEmail())
                 .password(user.getPassword())
                 .role(user.getRole())
+                .deleted(user.getDeleted())
                 .build();
     }
 
