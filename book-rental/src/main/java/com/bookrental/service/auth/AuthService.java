@@ -7,7 +7,6 @@ import com.bookrental.config.exceptions.ForbiddenException;
 import com.bookrental.security.jwt.JwtUtil;
 import com.bookrental.service.user.UserDto;
 import com.bookrental.service.user.UserService;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,8 +38,7 @@ public class AuthService {
         return userService.createUser(newUser);
     }
 
-    @SneakyThrows
-    public String loginUser(LoginRequest request) {
+    public LoginDto loginUser(LoginRequest request) throws ForbiddenException {
         UserDto userDto = userService.getUserByEmail(request.getEmail());
         if (!passwordEncoder.matches(request.getPassword(), userDto.getPassword())) {
             throw new BadRequestException("Invalid credentials");
@@ -48,7 +46,12 @@ public class AuthService {
         if (userDto.isDeleted()) {
             throw new ForbiddenException("Account has been deleted");
         }
-        return jwtUtil.generateToken(userDto.getEmail(), userDto.getPublicId());
+
+        return LoginDto.builder()
+                .publicId(userDto.getPublicId())
+                .role(userDto.getRole())
+                .jwt(jwtUtil.generateToken(userDto.getEmail(), userDto.getPublicId()))
+                .build();
     }
 
 }
