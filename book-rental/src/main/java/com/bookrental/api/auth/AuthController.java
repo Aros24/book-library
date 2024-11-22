@@ -7,6 +7,7 @@ import com.bookrental.config.exceptions.ErrorResponse;
 import com.bookrental.security.SecurityConstants;
 import com.bookrental.security.jwt.JwtUtil;
 import com.bookrental.service.auth.AuthService;
+import com.bookrental.service.user.UserDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -46,8 +47,10 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Bad request, missing required fields", content = @Content(mediaType = "application/json")),
     })
     public AuthResponse register(@Valid @RequestBody RegisterRequest request) {
+        UserDto user = authService.registerUser(request);
         return AuthResponse.builder()
-                .userPublicId(authService.registerUser(request).getPublicId())
+                .userPublicId(user.getPublicId())
+                .role(user.getRole())
                 .build();
     }
 

@@ -16,4 +16,8 @@ public class AuthResponse {
     @Schema(description = "The public ID of the authenticated user in uuid form")
     String userPublicId;
 
+    @JsonProperty("role")
+    @Schema(description = "Users' role for front-end purposes")
+    String role;
+
 }
