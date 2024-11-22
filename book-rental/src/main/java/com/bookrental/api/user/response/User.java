@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Builder
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class GetUserResponse {
+public class User {
 
     @Schema(description = "Unique public ID of the user in UUID form")
     String publicId;

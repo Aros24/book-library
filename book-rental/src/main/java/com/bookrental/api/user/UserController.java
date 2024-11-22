@@ -1,6 +1,6 @@
 package com.bookrental.api.user;
 
-import com.bookrental.api.user.response.GetUserResponse;
+import com.bookrental.api.user.response.User;
 import com.bookrental.config.exceptions.ErrorResponse;
 import com.bookrental.service.user.UserDto;
 import com.bookrental.service.user.UserService;
@@ -35,15 +35,15 @@ public class UserController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User details successfully fetched",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = GetUserResponse.class))),
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
             @ApiResponse(responseCode = "403", description = "User is not authorized to access the details of this user",
                     content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "User not found",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public GetUserResponse getUserByPublicId(@PathVariable("publicId") String publicID) {
+    public User getUserByPublicId(@PathVariable("publicId") String publicID) {
         UserDto user = userService.getUserByPublicId(publicID);
-        return GetUserResponse.builder()
+        return User.builder()
                 .publicId(user.getPublicId())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
