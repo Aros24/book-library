@@ -3,6 +3,7 @@ package com.bookrental.service.auth;
 import com.bookrental.api.auth.request.LoginRequest;
 import com.bookrental.api.auth.request.RegisterRequest;
 import com.bookrental.config.exceptions.BadRequestException;
+import com.bookrental.config.exceptions.ForbiddenException;
 import com.bookrental.security.jwt.JwtUtil;
 import com.bookrental.service.user.UserDto;
 import com.bookrental.service.user.UserService;
@@ -67,7 +68,7 @@ class AuthServiceTest {
     }
 
     @Test
-    void loginUser_ShouldReturnToken_WhenCredentialsAreValid() {
+    void loginUser_ShouldReturnToken_WhenCredentialsAreValid() throws ForbiddenException {
         // Given
         LoginRequest loginRequest = createLoginRequest("john.doe@example.com", "password");
         UserDto userDto = createUserDto();
@@ -79,7 +80,7 @@ class AuthServiceTest {
         when(jwtUtil.generateToken(userDto.getEmail(), userDto.getPublicId())).thenReturn(expectedToken);
 
         // When
-        String result = authService.loginUser(loginRequest);
+        String result = authService.loginUser(loginRequest).getJwt();
 
         // Then
         assertNotNull(result);

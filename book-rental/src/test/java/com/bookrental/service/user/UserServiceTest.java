@@ -127,14 +127,16 @@ class UserServiceTest {
     }
 
     private User createTestUser(String email) {
-        User user = new User();
-        user.setPublicId("12345");
-        user.setFirstName("John");
-        user.setLastName("Doe");
-        user.setEmail(email);
-        user.setPassword("password");
-        user.setRole("basic");
-        user.setCreatedAt(Instant.now().atZone(java.time.ZoneOffset.UTC).toLocalDateTime());
-        return user;
+        return User.builder()
+                .publicId("12345")
+                .firstName("John")
+                .lastName("Doe")
+                .email(email)
+                .password("password")
+                .role("basic")
+                .deleted(false)
+                .createdAt(Instant.now().atZone(java.time.ZoneOffset.UTC).toLocalDateTime())
+                .build();
     }
+
 }
