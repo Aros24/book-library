@@ -49,6 +49,7 @@ public class UserController {
                 .lastName(user.getLastName())
                 .email(user.getEmail())
                 .role(user.getRole())
+                .deleted(user.isDeleted())
                 .build();
     }
 
