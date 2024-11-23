@@ -71,12 +71,7 @@ public class UserService {
     }
 
     public UserDto getUserByPublicId(String publicId) {
-        Optional<User> user = userRepository.getByPublicId(publicId);
-        if (user.isPresent()) {
-            User dbUser = user.get();
-            return buildUser(dbUser);
-        }
-        throw new ResourceNotFoundException("Failed to obtain user by publicId");
+        return buildUser(getUserByPublicIdFromDb(publicId));
     }
 
     public List<UserDto> getUsers(GetUserAccountParams params) {
@@ -95,11 +90,7 @@ public class UserService {
     }
 
     public UserDto editUser(String publicId, EditUserRequest editUserRequest) throws ForbiddenException {
-        Optional<User> userOptional = userRepository.getByPublicId(publicId);
-        if (userOptional.isEmpty()) {
-            throw new ResourceNotFoundException("User not found");
-        }
-        User user = userOptional.get();
+        User user = getUserByPublicIdFromDb(publicId);
 
         if (!securityUtil.checkIfAdmin(publicId) &&
                 !securityUtil.checkIfPasswordMatches(editUserRequest.getCurrentPassword(), user.getPassword())) {
@@ -117,6 +108,20 @@ public class UserService {
         }
 
         return buildUser(userRepository.save(user));
+    }
+
+    public UserDto toggleUserDeletedStatus(String publicId) {
+        User user = getUserByPublicIdFromDb(publicId);
+        user.setDeleted(!user.getDeleted());
+        return buildUser(userRepository.save(user));
+    }
+
+    private User getUserByPublicIdFromDb(String publicId) {
+        Optional<User> user = userRepository.getByPublicId(publicId);
+        if (user.isPresent()) {
+            return user.get();
+        }
+        throw new ResourceNotFoundException("Failed to obtain user by publicId");
     }
 
     private boolean checkIfUserExists(String email) {

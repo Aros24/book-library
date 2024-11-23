@@ -96,4 +96,22 @@ public class UserController {
         return userMapper.mapUserDtoToUser(userService.editUser(publicId, request));
     }
 
+    @PatchMapping("/{publicId}/status")
+    @Operation(
+            summary = "Toggle user's deleted status by public ID",
+            description = "Reverts the user's 'deleted' status. Non-admin users can only modify their own account."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User status updated successfully",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden: Insufficient permissions",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    public User toggleUserDeletedStatus(@PathVariable("publicId") String publicId) throws ForbiddenException {
+        securityUtil.checkUserAccess(publicId);
+        return userMapper.mapUserDtoToUser(userService.toggleUserDeletedStatus(publicId));
+    }
+
 }
