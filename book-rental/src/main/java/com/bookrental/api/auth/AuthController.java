@@ -49,6 +49,7 @@ public class AuthController {
         UserDto user = authService.registerUser(request);
         return AuthResponse.builder()
                 .userPublicId(user.getPublicId())
+                .role(user.getRole())
                 .build();
     }
 
