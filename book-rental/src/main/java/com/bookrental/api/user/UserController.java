@@ -5,7 +5,6 @@ import com.bookrental.api.user.request.GetUserAccountParams;
 import com.bookrental.api.user.response.User;
 import com.bookrental.config.exceptions.ErrorResponse;
 import com.bookrental.config.exceptions.ForbiddenException;
-import com.bookrental.security.SecurityConfig;
 import com.bookrental.security.SecurityUtil;
 import com.bookrental.service.user.UserDto;
 import com.bookrental.service.user.UserService;
