@@ -6,6 +6,7 @@ CREATE TABLE user (
                       email VARCHAR(255) NOT NULL UNIQUE,
                       password VARCHAR(255) NOT NULL,
                       role VARCHAR(50) DEFAULT 'basic',
+                      deleted TINYINT(1) DEFAULT 0 NOT NULL,
                       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -72,3 +73,15 @@ CREATE INDEX idx_book_author_book_id ON book_author(book_id);
 CREATE INDEX idx_book_author_book_public_id ON book_author(book_public_id);
 CREATE INDEX idx_book_author_author_id ON book_author(author_id);
 CREATE INDEX idx_book_author_author_public_id ON book_author(author_public_id);
+
+INSERT INTO user (public_id, first_name, last_name, email, password, role, deleted)
+VALUES
+    ('123e4567-e89b-12d3-a456-426614174001', 'User', 'One', 'user1@example.com', '$2b$12$mGLhDK.9eb49r5dUjJHC.ekEHIAMKvyLsQrZCJBsYZvEOm.VSYZzK', 'basic', 0),
+
+    ('123e4567-e89b-12d3-a456-426614174002', 'Admin', 'One', 'admin1@example.com', '$2a$12$U9B1BLDyDEXksGRa5u3Qk.5uKGICs.xER.qRdmHGKHe/gNWybfiqi', 'admin', 0),
+
+    ('123e4567-e89b-12d3-a456-426614174003', 'Admin', 'Two', 'admin2@example.com', '$2a$12$TqjGpwwNCU.w0mb8BUVWW.s7yPvrFxnCsBX0r1eFmPVNSfn90sgLW', 'admin', 0),
+
+    ('123e4567-e89b-12d3-a456-426614174004', 'User', 'Two', 'user2@example.com', '$2a$12$8PkAUnlowjw./a.Eqizki.TlzjS8zqf9KJHy8XGiF7ZfRnMkHQwd2', 'basic', 0),
+
+    ('123e4567-e89b-12d3-a456-426614174005', 'User', 'Three', 'user3@example.com', '$2a$12$NVXudWs5ggwXqc8FojRXWeZjaLJRmpcZ1Vq4BaBGYZXkAoxCRtQDq', 'basic', 0);

@@ -25,8 +25,8 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "user")
-public class User {
+@Table(name = "book")
+public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,28 +35,22 @@ public class User {
     @Column(name = "public_id", nullable = false, unique = true, updatable = false)
     private String publicId;
 
-    @Column(name = "first_name", nullable = false)
-    private String firstName;
+    @Column(name = "title", nullable = false)
+    private String title;
 
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
+    @Column(name = "isbn", nullable = false, unique = true, updatable = false)
+    private String isbn;
 
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
+    @Column(name = "publication_year")
+    private Integer publicationYear;
 
-    @Column(name = "password", nullable = false)
-    private String password;
+    @Column(name = "publisher")
+    private String publisher;
 
-    @Column(name = "role", nullable = false, length = 50)
-    private String role;
-
-    @Column(name = "deleted", nullable = false)
-    private Boolean deleted;
-
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Rent> rents;
 
     @PrePersist
