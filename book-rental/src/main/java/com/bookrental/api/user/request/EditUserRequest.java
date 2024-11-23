@@ -1,5 +1,7 @@
 package com.bookrental.api.user.request;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -8,19 +10,20 @@ import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class EditUserRequest {
 
     @Schema(description = "New first name of the user", example = "John")
-    private String firstName;
+    String firstName;
 
     @Schema(description = "New last name of the user", example = "Doe")
-    private String lastName;
+    String lastName;
 
     @Schema(description = "Current password of the user", example = "oldPassword123")
-    private String currentPassword;
+    String currentPassword;
 
     @Schema(description = "New password of the user", example = "newPassword123")
-    private String newPassword;
+    String newPassword;
 
 }
