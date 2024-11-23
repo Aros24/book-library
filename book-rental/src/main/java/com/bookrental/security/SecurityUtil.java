@@ -3,6 +3,7 @@ package com.bookrental.security;
 import com.bookrental.config.exceptions.ForbiddenException;
 import com.bookrental.security.jwt.JwtAuthenticationToken;
 import com.bookrental.security.jwt.JwtUtil;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -10,13 +11,12 @@ import org.springframework.stereotype.Component;
 public class SecurityUtil {
 
     private final JwtUtil jwtUtil;
-    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     private static final String ROLE_ADMIN = "admin";
 
-    public SecurityUtil(JwtUtil jwtUtil, PasswordEncoder passwordEncoder) {
+    public SecurityUtil(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
-        this.passwordEncoder = passwordEncoder;
     }
 
     public void checkUserAccess(String providedPublicId) throws ForbiddenException {
