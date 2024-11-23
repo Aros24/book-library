@@ -4,6 +4,7 @@ import com.bookrental.api.auth.request.LoginRequest;
 import com.bookrental.api.auth.request.RegisterRequest;
 import com.bookrental.config.exceptions.BadRequestException;
 import com.bookrental.config.exceptions.ForbiddenException;
+import com.bookrental.security.SecurityUtil;
 import com.bookrental.security.jwt.JwtUtil;
 import com.bookrental.service.user.UserDto;
 import com.bookrental.service.user.UserService;
@@ -32,10 +33,10 @@ class AuthServiceTest {
     private UserService userService;
 
     @Mock
-    private PasswordEncoder passwordEncoder;
+    private JwtUtil jwtUtil;
 
     @Mock
-    private JwtUtil jwtUtil;
+    private SecurityUtil securityUtil;
 
     @InjectMocks
     private AuthService authService;
@@ -51,7 +52,7 @@ class AuthServiceTest {
                 .build();
         UserDto expectedUserDto = createUserDto();
 
-        when(passwordEncoder.encode("password")).thenReturn("encoded_password");
+        when(securityUtil.encryptPassword("password")).thenReturn("encoded_password");
         when(userService.createUser(any(UserDto.class))).thenReturn(expectedUserDto);
 
         // When
@@ -63,7 +64,7 @@ class AuthServiceTest {
         assertEquals("Doe", result.getLastName());
         assertEquals("john.doe@example.com", result.getEmail());
         assertEquals("basic", result.getRole());
-        verify(passwordEncoder, times(1)).encode("password");
+        verify(securityUtil, times(1)).encryptPassword("password");
         verify(userService, times(1)).createUser(any(UserDto.class));
     }
 
@@ -76,7 +77,7 @@ class AuthServiceTest {
         String expectedToken = "test-jwt-token";
 
         when(userService.getUserByEmail("john.doe@example.com")).thenReturn(userDto);
-        when(passwordEncoder.matches("password", "encoded_password")).thenReturn(true);
+        when(securityUtil.checkIfPasswordMatches("password", "encoded_password")).thenReturn(true);
         when(jwtUtil.generateToken(userDto.getEmail(), userDto.getPublicId())).thenReturn(expectedToken);
 
         // When
@@ -86,7 +87,7 @@ class AuthServiceTest {
         assertNotNull(result);
         assertEquals(expectedToken, result);
         verify(userService, times(1)).getUserByEmail("john.doe@example.com");
-        verify(passwordEncoder, times(1)).matches("password", "encoded_password");
+        verify(securityUtil, times(1)).checkIfPasswordMatches("password", "encoded_password");
         verify(jwtUtil, times(1)).generateToken(userDto.getEmail(), userDto.getPublicId());
     }
 
@@ -97,7 +98,7 @@ class AuthServiceTest {
         UserDto userDto = createUserDto();
 
         when(userService.getUserByEmail("john.doe@example.com")).thenReturn(userDto);
-        when(passwordEncoder.matches(eq("wrong_password"), eq("encoded_password"))).thenReturn(false);
+        when(securityUtil.checkIfPasswordMatches(eq("wrong_password"), eq("encoded_password"))).thenReturn(false);
 
         // When & Then
         BadRequestException exception = assertThrows(BadRequestException.class, () ->
@@ -105,7 +106,7 @@ class AuthServiceTest {
         );
         assertEquals("Invalid credentials", exception.getMessage());
         verify(userService, times(1)).getUserByEmail("john.doe@example.com");
-        verify(passwordEncoder, times(1)).matches("wrong_password", "encoded_password");
+        verify(securityUtil, times(1)).checkIfPasswordMatches("wrong_password", "encoded_password");
         verify(jwtUtil, never()).generateToken(anyString(), anyString());
     }
 
