@@ -1,5 +1,6 @@
 package com.bookrental.security.jwt;
 
+import com.bookrental.config.exceptions.UnauthorizedException;
 import com.bookrental.security.SecurityConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -7,6 +8,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -39,7 +42,7 @@ public class JwtUtil {
 
     public boolean validateRawToken(String token) {
         try {
-            Jws<Claims> jwsClaims =  Jwts.parser().verifyWith(createSigningKey()).build().parseSignedClaims(token);
+            Jws<Claims> jwsClaims = Jwts.parser().verifyWith(createSigningKey()).build().parseSignedClaims(token);
             Claims claims = jwsClaims.getPayload();
             return !claims.getExpiration().before(Date.from(Instant.now()));
         } catch (Exception e) {
@@ -69,6 +72,15 @@ public class JwtUtil {
         long currentTime = Instant.now().toEpochMilli();
         long expirationTime = claims.getExpiration().getTime();
         return expirationTime - currentTime < refreshTime;
+    }
+
+    public Authentication getTokenFromSession(String userPublicId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new UnauthorizedException("User is not authenticated.");
+        }
+
+        return authentication;
     }
 
 

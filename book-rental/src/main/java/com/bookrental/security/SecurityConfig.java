@@ -1,9 +1,9 @@
 package com.bookrental.security;
 
 import com.bookrental.config.exceptions.ForbiddenException;
-import com.bookrental.config.exceptions.UnauthorizedException;
 import com.bookrental.security.filters.JwtAuthenticationFilter;
 import com.bookrental.security.jwt.JwtAuthenticationToken;
+import com.bookrental.security.jwt.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,8 +11,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -52,20 +50,6 @@ public class SecurityConfig {
     @Bean
     public GrantedAuthorityDefaults grantedAuthorityDefaults() {
         return new GrantedAuthorityDefaults("");
-    }
-
-    public static void checkUserAccess(String providedPublicId) throws ForbiddenException {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new UnauthorizedException("User is not authenticated.");
-        }
-
-        JwtAuthenticationToken token = (JwtAuthenticationToken) authentication;
-        String loggedInUserPublicId = token.getPublicId();
-        String loggedInUserRole = token.getRole();
-        if (!loggedInUserPublicId.equals(providedPublicId) && !ROLE_ADMIN.equals(loggedInUserRole)) {
-            throw new ForbiddenException("You do not have permission to access this resource.");
-        }
     }
 
 }
