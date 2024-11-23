@@ -13,7 +13,7 @@ public enum UserConstants {
     EMAIL("email"),
     ROLE("role"),
     DELETED("deleted");
-    
+
     String value;
 
     UserConstants(String name) {
