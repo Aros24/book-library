@@ -17,6 +17,7 @@ public class PersistenceUtil {
 
     private static final int MIN_SIZE = 1;
     private static final int MIN_PAGE = 0;
+    private static final String ID_CONSTANT = "id";
 
     public Pageable buildPageable(Integer size, Integer page, String orderBy, String orderDirection) {
         if (size == null || size < MIN_SIZE) {
@@ -25,7 +26,7 @@ public class PersistenceUtil {
         if (page == null || page < MIN_PAGE) {
             throw new BadRequestException("Invalid page number");
         }
-        String order = orderBy != null ? orderBy : UserConstants.ID.getValue();
+        String order = orderBy != null ? orderBy : ID_CONSTANT;
         Sort.Direction direction = Sort.Direction.DESC.toString().equalsIgnoreCase(orderDirection) ? Sort.Direction.DESC : Sort.Direction.ASC;
         return PageRequest.of(page, size, Sort.by(direction, order));
     }

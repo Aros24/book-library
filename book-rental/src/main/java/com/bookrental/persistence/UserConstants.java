@@ -8,14 +8,12 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public enum UserConstants {
 
-    ID("id"),
     FIRST_NAME("firstName"),
     LAST_NAME("lastName"),
     EMAIL("email"),
     ROLE("role"),
     DELETED("deleted");
-
-
+    
     String value;
 
     UserConstants(String name) {
