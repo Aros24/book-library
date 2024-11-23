@@ -12,12 +12,12 @@ public class SecurityUtil {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
 
+    private static final String ROLE_ADMIN = "admin";
+
     public SecurityUtil(JwtUtil jwtUtil, PasswordEncoder passwordEncoder) {
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
     }
-
-    private static final String ROLE_ADMIN = "admin";
 
     public void checkUserAccess(String providedPublicId) throws ForbiddenException {
         JwtAuthenticationToken token = (JwtAuthenticationToken) jwtUtil.getTokenFromSession(providedPublicId);
