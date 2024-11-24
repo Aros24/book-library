@@ -39,13 +39,7 @@ public class AuthorService {
                 .birthYear(request.getBirthYear())
                 .build();
 
-        try {
-            authorRepository.save(newAuthor);
-        } catch (Exception e) {
-            authorRepository.deleteByPublicId(newAuthor.getPublicId());
-            throw e;
-        }
-
+        authorRepository.save(newAuthor);
         return buildAuthor(newAuthor);
     }
 

@@ -53,13 +53,7 @@ public class UserService {
                 .deleted(false)
                 .build();
 
-        try {
-            userRepository.save(newUser);
-        } catch (Exception e) {
-            userRepository.deleteByPublicId(userDto.getPublicId());
-            throw e;
-        }
-
+        userRepository.save(newUser);
         return userDto;
     }
 
