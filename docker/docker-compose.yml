@@ -30,6 +30,16 @@ services:
     ports:
       - "3316:3316" # Expose MySQL on port 3316 for connections
 
+# Angular Frontend
+  book-rental-frontend:
+    build: ../book-rental-front
+    networks:
+      - application-network
+    depends_on:
+      - book-rental
+    ports:
+      - "4200:80"
+
 # Volumes for MySQL data persistence
 volumes:
   mysql-data:
