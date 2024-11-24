@@ -1,18 +1,21 @@
 package com.bookrental.service.user;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder(toBuilder = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDto {
 
-    private String publicId;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String password;
-    private String role;
-    private boolean deleted;
+    String publicId;
+    String firstName;
+    String lastName;
+    String email;
+    String password;
+    String role;
+    boolean deleted;
 
 }
