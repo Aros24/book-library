@@ -48,4 +48,12 @@ public class OpenApiConfig {
                 .build();
     }
 
+    @Bean
+    public GroupedOpenApi authorApi() {
+        return GroupedOpenApi.builder()
+                .group("Author")
+                .pathsToMatch("/v1/authors**")
+                .build();
+    }
+
 }
