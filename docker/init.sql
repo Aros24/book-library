@@ -47,11 +47,8 @@ CREATE TABLE rent
 CREATE TABLE book_author
 (
     id               INT PRIMARY KEY AUTO_INCREMENT,
-    public_id        VARCHAR(36) NOT NULL UNIQUE,
     book_id          INT         NOT NULL,
-    book_public_id   VARCHAR(36) NOT NULL,
     author_id        INT         NOT NULL,
-    author_public_id VARCHAR(36) NOT NULL,
     FOREIGN KEY (book_id) REFERENCES book (id),
     FOREIGN KEY (author_id) REFERENCES author (id)
 );
@@ -73,11 +70,8 @@ CREATE INDEX idx_rent_user_public_id ON rent (user_public_id);
 CREATE INDEX idx_rent_book_id ON rent (book_id);
 CREATE INDEX idx_rent_book_public_id ON rent (book_public_id);
 
-CREATE INDEX idx_book_author_public_id ON book_author (public_id);
 CREATE INDEX idx_book_author_book_id ON book_author (book_id);
-CREATE INDEX idx_book_author_book_public_id ON book_author (book_public_id);
 CREATE INDEX idx_book_author_author_id ON book_author (author_id);
-CREATE INDEX idx_book_author_author_public_id ON book_author (author_public_id);
 
 INSERT INTO user (public_id, first_name, last_name, email, password, role, deleted)
 VALUES ('123e4567-e89b-12d3-a456-426614174001', 'User', 'One', 'user1@example.com',
@@ -94,3 +88,14 @@ VALUES ('123e4567-e89b-12d3-a456-426614174001', 'User', 'One', 'user1@example.co
 
        ('123e4567-e89b-12d3-a456-426614174005', 'User', 'Three', 'user3@example.com',
         '$2a$12$NVXudWs5ggwXqc8FojRXWeZjaLJRmpcZ1Vq4BaBGYZXkAoxCRtQDq', 'basic', 0);
+INSERT INTO author (public_id, name, birth_year)
+VALUES ('223e4567-e89b-12d3-a456-426614174001', 'Author One', 1980),
+       ('223e4567-e89b-12d3-a456-426614174002', 'Author Two', 1975),
+       ('223e4567-e89b-12d3-a456-426614174003', 'Author Three', 1965),
+       ('223e4567-e89b-12d3-a456-426614174004', 'Author Four', 1990),
+       ('223e4567-e89b-12d3-a456-426614174005', 'Author Five', 1982),
+       ('223e4567-e89b-12d3-a456-426614174006', 'Author Six', 1988),
+       ('223e4567-e89b-12d3-a456-426614174007', 'Author Seven', 1972),
+       ('223e4567-e89b-12d3-a456-426614174008', 'Author Eight', 1995),
+       ('223e4567-e89b-12d3-a456-426614174009', 'Author Nine', 1960),
+       ('223e4567-e89b-12d3-a456-426614174010', 'Author Ten', 1978);
