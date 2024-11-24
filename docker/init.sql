@@ -46,7 +46,6 @@ CREATE TABLE rent
 
 CREATE TABLE book_author
 (
-    id               INT PRIMARY KEY AUTO_INCREMENT,
     book_id          INT         NOT NULL,
     author_id        INT         NOT NULL,
     FOREIGN KEY (book_id) REFERENCES book (id),

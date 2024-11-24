@@ -29,7 +29,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/v1/login", "/auth/v1/register", "/public/**").permitAll()
-                        .requestMatchers("/v1/users/accounts**", "/v1/authors**").hasAnyRole(ROLE_ADMIN)
+                        .requestMatchers("/v1/users/accounts**", "/v1/authors**", "/v1/books/add").hasAnyRole(ROLE_ADMIN)
                         .requestMatchers("/v1/**").hasAnyRole(ROLE_BASIC, ROLE_ADMIN)
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

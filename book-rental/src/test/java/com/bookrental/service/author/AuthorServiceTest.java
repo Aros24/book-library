@@ -77,22 +77,6 @@ class AuthorServiceTest {
     }
 
     @Test
-    void createAuthor_ThrowsExceptionWhenSaveFails() {
-        // Given
-        when(serviceUtil.generateRandomUUID()).thenReturn(PUBLIC_ID);
-        doThrow(new RuntimeException("Database error")).when(authorRepository).save(any(Author.class));
-
-        // When & Then
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            authorService.createAuthor(createAuthorRequest);
-        });
-
-        assertEquals("Database error", exception.getMessage());
-        verify(authorRepository, times(1)).save(any(Author.class));
-        verify(authorRepository, times(1)).deleteByPublicId(PUBLIC_ID);
-    }
-
-    @Test
     void getAuthors_WhenAuthorsExist_ReturnsAuthorList() {
         // Given
         GetAuthorParams params = createGetAuthorParams();

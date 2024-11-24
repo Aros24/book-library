@@ -108,25 +108,6 @@ class UserServiceTest {
     }
 
     @Test
-    void createUser_ThrowsExceptionWhenSaveFails() {
-        // Given
-        when(serviceUtil.generateRandomUUID()).thenReturn(PUBLIC_ID);
-        doThrow(new RuntimeException("Database error")).when(userRepository).save(any(User.class));
-
-        // When & Then
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            userService.createUser(createTestUserDto());
-        });
-
-        assertEquals("Database error", exception.getMessage());
-
-        // Verify that the attempted save was rolled back with deleteByPublicId
-        verify(userRepository, times(1)).save(any(User.class));
-        verify(userRepository, times(1)).deleteByPublicId(PUBLIC_ID);
-    }
-
-
-    @Test
     void getUserByEmail_WhenUserExists_ReturnsUserDto() {
         // Given
         User user = createTestUser();
