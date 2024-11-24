@@ -2,6 +2,7 @@ package com.bookrental.persistence;
 
 import com.bookrental.api.user.request.GetUserAccountParams;
 import com.bookrental.config.exceptions.BadRequestException;
+import com.bookrental.persistence.entity.Author;
 import com.bookrental.persistence.entity.User;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.domain.PageRequest;
@@ -49,6 +50,18 @@ public class PersistenceUtil {
             }
             if (params.getDeleted() != null) {
                 predicates.add(cb.equal(root.get(UserConstants.DELETED.getValue()), params.getDeleted()));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+    }
+
+    public Specification<Author> buildAuthorListSpecification(String name) {
+        return (root, query, cb) -> {
+            var predicates = new ArrayList<Predicate>();
+
+            if (name != null && !name.isBlank()) {
+                predicates.add(cb.like(root.get("name"), wrapForLikeQuery(name)));
             }
 
             return cb.and(predicates.toArray(new Predicate[0]));

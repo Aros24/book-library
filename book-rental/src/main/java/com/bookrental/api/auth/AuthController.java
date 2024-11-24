@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,15 +43,16 @@ public class AuthController {
             description = "Creates a new user with the provided details and returns the user's public ID."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User successfully registered", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthResponse.class))),
+            @ApiResponse(responseCode = "201", description = "User successfully registered", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthResponse.class))),
             @ApiResponse(responseCode = "400", description = "Bad request, missing required fields", content = @Content(mediaType = "application/json")),
     })
-    public AuthResponse register(@Valid @RequestBody RegisterRequest request) {
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         UserDto user = authService.registerUser(request);
-        return AuthResponse.builder()
-                .userPublicId(user.getPublicId())
-                .role(user.getRole())
-                .build();
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(AuthResponse.builder()
+                        .userPublicId(user.getPublicId())
+                        .role(user.getRole())
+                        .build());
     }
 
     @PostMapping("/login")

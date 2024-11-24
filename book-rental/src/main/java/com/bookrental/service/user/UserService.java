@@ -9,6 +9,7 @@ import com.bookrental.persistence.PersistenceUtil;
 import com.bookrental.persistence.entity.User;
 import com.bookrental.persistence.repositories.UserRepository;
 import com.bookrental.security.SecurityUtil;
+import com.bookrental.service.ServiceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class UserService {
@@ -24,13 +24,15 @@ public class UserService {
     private final UserRepository userRepository;
     private final PersistenceUtil persistenceUtil;
     private final SecurityUtil securityUtil;
+    private final ServiceUtil serviceUtil;
 
     @Autowired
     public UserService(UserRepository userRepository, PersistenceUtil persistenceUtil,
-                       SecurityUtil securityUtil) {
+                       SecurityUtil securityUtil, ServiceUtil serviceUtil) {
         this.userRepository = userRepository;
         this.persistenceUtil = persistenceUtil;
         this.securityUtil = securityUtil;
+        this.serviceUtil = serviceUtil;
     }
 
     public UserDto createUser(UserDto userDto) {
@@ -39,7 +41,7 @@ public class UserService {
         }
 
         userDto = userDto.toBuilder()
-                .publicId(generateRandomUUID())
+                .publicId(serviceUtil.generateRandomUUID())
                 .build();
         User newUser = User.builder()
                 .publicId(userDto.getPublicId())
@@ -126,10 +128,6 @@ public class UserService {
 
     private boolean checkIfUserExists(String email) {
         return userRepository.existsByEmail(email);
-    }
-
-    private String generateRandomUUID() {
-        return UUID.randomUUID().toString(); // length = 36
     }
 
     private UserDto buildUser(User user) {

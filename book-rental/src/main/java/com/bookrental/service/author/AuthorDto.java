@@ -1,4 +1,4 @@
-package com.bookrental.service.user;
+package com.bookrental.service.author;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -8,14 +8,10 @@ import lombok.experimental.FieldDefaults;
 @Data
 @Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserDto {
+public class AuthorDto {
 
     String publicId;
-    String firstName;
-    String lastName;
-    String email;
-    String password;
-    String role;
-    boolean deleted;
+    String name;
+    int birthYear;
 
 }
