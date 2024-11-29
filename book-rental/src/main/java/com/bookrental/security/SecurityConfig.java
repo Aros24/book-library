@@ -28,9 +28,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        // for all
                         .requestMatchers("/auth/v1/login", "/auth/v1/register", "/public/**").permitAll()
-                        .requestMatchers("/v1/users/accounts**", "/v1/authors**", "/v1/books/add").hasAnyRole(ROLE_ADMIN)
-                        .requestMatchers("/v1/**").hasAnyRole(ROLE_BASIC, ROLE_ADMIN)
+                        // for admin only
+                        .requestMatchers("/v1/users/accounts**", "/v1/authors**", "/v1/books/add", "/v1/books/{publicId}/amount").hasRole(ROLE_ADMIN)
+                        // shared
+                        .requestMatchers("/v1/books/{publicId}", "/v1/books**",
+                                "/v1/users/{publicId}", "/v1/users/{publicId}/status").hasAnyRole(ROLE_BASIC, ROLE_ADMIN)
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
