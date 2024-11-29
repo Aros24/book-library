@@ -16,6 +16,7 @@ public class BookDto {
     String publicId;
     String title;
     String isbn;
+    int amount;
     int publicationYear;
     String publisher;
     List<AuthorDto> authors;

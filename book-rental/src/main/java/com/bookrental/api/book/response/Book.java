@@ -26,6 +26,9 @@ public class Book {
     @Schema(description = "ISBN of the book", example = "9780743273565")
     String isbn;
 
+    @Schema(description = "Amount of the book in the stock", example = "5")
+    int amount;
+
     @Schema(description = "Publication year of the book", example = "1925")
     int publicationYear;
 

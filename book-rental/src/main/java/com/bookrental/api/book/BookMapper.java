@@ -14,6 +14,7 @@ public class BookMapper {
                 .title(book.getTitle())
                 .isbn(book.getIsbn())
                 .publisher(book.getPublisher())
+                .amount(book.getAmount())
                 .publicationYear(book.getPublicationYear())
                 .authors(book.getAuthors().stream()
                         .map(authorDto -> Author.builder()
