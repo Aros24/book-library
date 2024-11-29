@@ -1,10 +1,18 @@
 package com.bookrental.persistence;
 
+import com.bookrental.api.book.request.GetBookParams;
 import com.bookrental.api.user.request.GetUserAccountParams;
 import com.bookrental.config.exceptions.BadRequestException;
+import com.bookrental.persistence.constants.AuthorConstants;
+import com.bookrental.persistence.constants.BookConstants;
+import com.bookrental.persistence.constants.UserConstants;
 import com.bookrental.persistence.entity.Author;
+import com.bookrental.persistence.entity.Book;
 import com.bookrental.persistence.entity.User;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -61,7 +69,34 @@ public class PersistenceUtil {
             var predicates = new ArrayList<Predicate>();
 
             if (name != null && !name.isBlank()) {
-                predicates.add(cb.like(root.get("name"), wrapForLikeQuery(name)));
+                predicates.add(cb.like(root.get(AuthorConstants.NAME.getValue()), wrapForLikeQuery(name)));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+    }
+
+    public Specification<Book> buildBookListSpecification(GetBookParams params) {
+        return (root, query, cb) -> {
+            var predicates = new ArrayList<Predicate>();
+
+            if (params.getTitle() != null) {
+                predicates.add(cb.like(root.get(BookConstants.TITLE.getValue()), wrapForLikeQuery(params.getTitle())));
+            }
+            if (params.getPublisher() != null) {
+                predicates.add(cb.like(root.get(BookConstants.PUBLISHER.getValue()), wrapForLikeQuery(params.getPublisher())));
+            }
+            if (params.getPublicationYear() != null) {
+                predicates.add(cb.equal(root.get(BookConstants.PUBLICATION_YEAR.getValue()), params.getPublicationYear()));
+            }
+            if (params.getAuthorName() != null) {
+                Subquery<Author> subquery = query.subquery(Author.class);
+                Root<Author> authorRoot = subquery.from(Author.class);
+                subquery.select(authorRoot);
+                subquery.where(cb.like(authorRoot.get(AuthorConstants.NAME.getValue()), wrapForLikeQuery(params.getAuthorName())));
+
+                Join<Book, Author> join = root.join(BookConstants.AUTHORS_JOIN.getValue());
+                predicates.add(cb.in(join).value(subquery));
             }
 
             return cb.and(predicates.toArray(new Predicate[0]));

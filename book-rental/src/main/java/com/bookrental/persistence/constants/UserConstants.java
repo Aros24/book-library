@@ -1,4 +1,4 @@
-package com.bookrental.persistence;
+package com.bookrental.persistence.constants;
 
 import lombok.AccessLevel;
 import lombok.Getter;

@@ -56,4 +56,12 @@ public class OpenApiConfig {
                 .build();
     }
 
+    @Bean
+    public GroupedOpenApi bookApi() {
+        return GroupedOpenApi.builder()
+                .group("Book")
+                .pathsToMatch("/v1/books/**", "/v1/books")
+                .build();
+    }
+
 }

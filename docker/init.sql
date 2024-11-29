@@ -16,7 +16,8 @@ CREATE TABLE book
     id               INT PRIMARY KEY AUTO_INCREMENT,
     public_id        VARCHAR(36)  NOT NULL UNIQUE,
     title            VARCHAR(255) NOT NULL,
-    isbn             VARCHAR(13)  NOT NULL UNIQUE,
+    isbn             VARCHAR(30)  NOT NULL UNIQUE,
+    amount           INT          NOT NULL CHECK ( amount >= 0 ),
     publication_year INT,
     publisher        VARCHAR(255),
     created_at       DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -46,7 +47,6 @@ CREATE TABLE rent
 
 CREATE TABLE book_author
 (
-    id               INT PRIMARY KEY AUTO_INCREMENT,
     book_id          INT         NOT NULL,
     author_id        INT         NOT NULL,
     FOREIGN KEY (book_id) REFERENCES book (id),
@@ -99,3 +99,19 @@ VALUES ('223e4567-e89b-12d3-a456-426614174001', 'Author One', 1980),
        ('223e4567-e89b-12d3-a456-426614174008', 'Author Eight', 1995),
        ('223e4567-e89b-12d3-a456-426614174009', 'Author Nine', 1960),
        ('223e4567-e89b-12d3-a456-426614174010', 'Author Ten', 1978);
+INSERT INTO book (public_id, title, isbn, amount, publication_year, publisher)
+VALUES ('323e4567-e89b-12d3-a456-426614174001', 'Book One', '978-3-16-148410-0', 10, 2020, 'Publisher One'),
+       ('323e4567-e89b-12d3-a456-426614174002', 'Book Two', '978-1-23-456789-7', 5, 2018, 'Publisher Two'),
+       ('323e4567-e89b-12d3-a456-426614174003', 'Book Three', '978-0-12-345678-9', 7, 2019, 'Publisher Three'),
+       ('323e4567-e89b-12d3-a456-426614174004', 'Book Four', '978-4-56-789012-3', 3, 2021, 'Publisher Four'),
+       ('323e4567-e89b-12d3-a456-426614174005', 'Book Five', '978-5-67-890123-4', 8, 2017, 'Publisher Five');
+INSERT INTO book_author (book_id, author_id)
+VALUES
+    ((SELECT id FROM book WHERE public_id = '323e4567-e89b-12d3-a456-426614174001'), (SELECT id FROM author WHERE public_id = '223e4567-e89b-12d3-a456-426614174001')),
+    ((SELECT id FROM book WHERE public_id = '323e4567-e89b-12d3-a456-426614174001'), (SELECT id FROM author WHERE public_id = '223e4567-e89b-12d3-a456-426614174002')),
+    ((SELECT id FROM book WHERE public_id = '323e4567-e89b-12d3-a456-426614174001'), (SELECT id FROM author WHERE public_id = '223e4567-e89b-12d3-a456-426614174003')),
+    ((SELECT id FROM book WHERE public_id = '323e4567-e89b-12d3-a456-426614174002'), (SELECT id FROM author WHERE public_id = '223e4567-e89b-12d3-a456-426614174004')),
+    ((SELECT id FROM book WHERE public_id = '323e4567-e89b-12d3-a456-426614174003'), (SELECT id FROM author WHERE public_id = '223e4567-e89b-12d3-a456-426614174005')),
+    ((SELECT id FROM book WHERE public_id = '323e4567-e89b-12d3-a456-426614174004'), (SELECT id FROM author WHERE public_id = '223e4567-e89b-12d3-a456-426614174006')),
+    ((SELECT id FROM book WHERE public_id = '323e4567-e89b-12d3-a456-426614174005'), (SELECT id FROM author WHERE public_id = '223e4567-e89b-12d3-a456-426614174007')),
+    ((SELECT id FROM book WHERE public_id = '323e4567-e89b-12d3-a456-426614174005'), (SELECT id FROM author WHERE public_id = '223e4567-e89b-12d3-a456-426614174008'));

@@ -14,9 +14,9 @@ import java.util.List;
 @Repository
 public interface AuthorRepository extends JpaRepository<Author, Integer> {
 
-    @Query(value = "DELETE FROM author WHERE public_id = :publicId", nativeQuery = true)
-    void deleteByPublicId(@Param("publicId") String publicId);
-
     List<Author> findAll(Specification<Author> specification, Pageable pageable);
+
+    @Query(value = "SELECT * FROM author WHERE public_id IN (:publicIds)", nativeQuery = true)
+    List<Author> findByPublicIdIn(@Param("publicIds") List<String> publicIds);
 
 }

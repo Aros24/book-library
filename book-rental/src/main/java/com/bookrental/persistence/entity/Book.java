@@ -44,6 +44,9 @@ public class Book {
     @Column(name = "isbn", nullable = false, unique = true, updatable = false)
     private String isbn;
 
+    @Column(name = "amount", nullable = false)
+    private Integer amount;
+
     @Column(name = "publication_year")
     private Integer publicationYear;
 
@@ -56,7 +59,7 @@ public class Book {
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Rent> rents;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "book_author",
             joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"),
