@@ -2,10 +2,12 @@ package com.bookrental.api.book;
 
 import com.bookrental.api.author.response.Author;
 import com.bookrental.api.book.response.Book;
+import com.bookrental.api.user.response.User;
 import com.bookrental.service.author.AuthorDto;
 import com.bookrental.service.book.BookDto;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,7 +19,7 @@ class BookMapperTest {
     private final BookMapper bookMapper = new BookMapper();
 
     @Test
-    void mapBookDtoToBook_ShouldMapCorrectly() {
+    void mapBookDtoToBook_ShouldMapCorrectly() throws IllegalAccessException {
         // Given
         List<AuthorDto> authorDtos = List.of(
                 AuthorDto.builder()
@@ -63,6 +65,12 @@ class BookMapperTest {
             assertEquals(authorDto.getPublicId(), author.getPublicId());
             assertEquals(authorDto.getName(), author.getName());
             assertEquals(authorDto.getBirthYear(), author.getBirthYear());
+        }
+
+        for (Field field : Book.class.getDeclaredFields()) {
+            field.setAccessible(true);
+            Object value = field.get(book);
+            assertNotNull(value, "Field '" + field.getName() + "' should not be null");
         }
     }
 
