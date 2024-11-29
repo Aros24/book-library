@@ -44,6 +44,9 @@ public class Book {
     @Column(name = "isbn", nullable = false, unique = true, updatable = false)
     private String isbn;
 
+    @Column(name = "amount", nullable = false)
+    private Integer amount;
+
     @Column(name = "publication_year")
     private Integer publicationYear;
 
