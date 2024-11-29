@@ -33,4 +33,3 @@ public class CreateBookRequest {
     List<String> authorPublicIds;
 
 }
-
