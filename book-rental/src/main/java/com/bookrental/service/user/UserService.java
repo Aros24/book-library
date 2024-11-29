@@ -79,7 +79,7 @@ public class UserService {
                 .toList();
 
         if (userDtoList.isEmpty()) {
-            throw new ResourceNotFoundException("Users not found");
+            throw new ResourceNotFoundException("Users not found for the provided criteria");
         }
 
         return userDtoList;
