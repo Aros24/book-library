@@ -195,7 +195,7 @@ class UserServiceTest {
         ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
             userService.getUsers(params);
         });
-        assertEquals("Users not found", exception.getMessage());
+        assertEquals("Users not found for the provided criteria", exception.getMessage());
     }
 
     @Test

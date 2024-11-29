@@ -16,13 +16,13 @@ public class BookMapper {
                 .publisher(book.getPublisher())
                 .amount(book.getAmount())
                 .publicationYear(book.getPublicationYear())
-                .authors(book.getAuthors().stream()
+                .authors(book.getAuthors() != null ? book.getAuthors().stream()
                         .map(authorDto -> Author.builder()
                                 .name(authorDto.getName())
                                 .birthYear(authorDto.getBirthYear())
                                 .publicId(authorDto.getPublicId())
                                 .build())
-                        .toList())
+                        .toList() : null)
                 .build();
     }
 
