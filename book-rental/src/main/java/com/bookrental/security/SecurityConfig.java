@@ -37,16 +37,23 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         // for all
-                        .requestMatchers("/auth/v1/login", "/auth/v1/register", "/public/**").permitAll()
+                        .requestMatchers(
+                                "/auth/v1/login", "/auth/v1/register", "/public/**"
+                        ).permitAll()
                         // for admin only
-                        .requestMatchers("/v1/users/accounts**",
+                        .requestMatchers(
+                                "/v1/users/accounts**",
                                 "/v1/authors**",
                                 "/v1/books/add", "/v1/books/{publicId}/amount",
-                                "/v1/rents/end/{rentPublicId}").hasRole(ROLE_ADMIN)
+                                "/v1/rents/end/{rentPublicId}",
+                                "/v1/rents/book/{bookPublicId}/user/{userPublicId}"
+                        ).hasRole(ROLE_ADMIN)
                         // shared
-                        .requestMatchers("/v1/books/{publicId}", "/v1/books**",
+                        .requestMatchers(
+                                "/v1/books/{publicId}", "/v1/books**",
                                 "/v1/users/{publicId}", "/v1/users/{publicId}/status",
-                                "/v1/rents/book/{bookPublicId}/user/{userPublicId}", "/v1/rents/user/{userPublicId}").hasAnyRole(ROLE_BASIC, ROLE_ADMIN)
+                                "/v1/rents/user/{userPublicId}"
+                        ).hasAnyRole(ROLE_BASIC, ROLE_ADMIN)
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
