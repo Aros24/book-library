@@ -42,7 +42,7 @@ public class SecurityConfig {
                         ).permitAll()
                         // for admin only
                         .requestMatchers(
-                                "/v1/users/accounts**",
+                                "/v1/users/accounts",
                                 "/v1/authors**",
                                 "/v1/books/add", "/v1/books/{publicId}/amount",
                                 "/v1/rents/end/{rentPublicId}",
