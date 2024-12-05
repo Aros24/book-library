@@ -124,6 +124,11 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
+    public User getUserRawEntityByPublicId(String publicId) {
+        return userRepository.getByPublicId(publicId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    }
+
     private UserDto buildUser(User user) {
         return UserDto.builder()
                 .publicId(user.getPublicId())
