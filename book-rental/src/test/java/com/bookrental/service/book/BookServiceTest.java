@@ -102,7 +102,7 @@ class BookServiceTest {
     @Test
     void getBookByPublicId_shouldThrowExceptionWhenNotFound() {
         // Given
-        when(bookRepository.findBookByPublicId(SAMPLE_PUBLIC_ID)).thenReturn(null);
+        when(bookRepository.findBookByPublicId(SAMPLE_PUBLIC_ID)).thenReturn(Optional.empty());
 
         // When / Then
         assertThatThrownBy(() -> bookService.getBookByPublicId(SAMPLE_PUBLIC_ID))
