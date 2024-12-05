@@ -17,10 +17,4 @@ public class GetRentParams {
     @Schema(description = "Size of the page for pagination", example = "10")
     Integer size;
 
-    @Schema(description = "Field to order by (optional)", example = "startDate")
-    String orderBy;
-
-    @Schema(description = "Direction of the order, either ASC (ascending) or DESC (descending)", example = "ASC", allowableValues = {"ASC", "DESC"})
-    private String orderDirection;
-
 }

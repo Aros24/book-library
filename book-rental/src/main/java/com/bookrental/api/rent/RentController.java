@@ -13,7 +13,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,8 +51,7 @@ public class RentController {
             @ApiResponse(responseCode = "404", description = "User or book not found",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
     })
-    public ResponseEntity<Rent> createRent(@PathVariable @NotNull String bookPublicId, @PathVariable @NotNull String userPublicId) throws ForbiddenException {
-        securityUtil.checkUserAccess(userPublicId);
+    public ResponseEntity<Rent> createRent(@PathVariable String bookPublicId, @PathVariable String userPublicId) {
         RentDto rentDto = rentService.createRent(bookPublicId, userPublicId);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(rentMapper.mapRentDtoToRent(rentDto));

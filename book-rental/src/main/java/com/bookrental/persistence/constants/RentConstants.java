@@ -9,7 +9,8 @@ import lombok.experimental.FieldDefaults;
 public enum RentConstants {
 
     PUBLIC_ID("userPublicId"),
-    START_DATE ("startDate");
+    START_DATE ("startDate"),
+    BOOK("book");
 
     String value;
 

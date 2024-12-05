@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Builder
@@ -26,12 +27,18 @@ public class Rent {
     @Schema(description = "Public ID of the book in UUID form")
     String bookPublicId;
 
+    @Schema(description = "Title of the book")
+    String bookTitle;
+
+    @Schema(description = "Authors of the book")
+    List<String> bookAuthors;
+
     @Schema(description = "Start date of the rent")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH::mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm")
     LocalDateTime startDate;
 
     @Schema(description = "End date of the rent")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH::mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm")
     LocalDateTime endDate;
 
 }

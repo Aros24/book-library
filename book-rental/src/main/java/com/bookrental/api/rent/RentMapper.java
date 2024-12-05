@@ -12,6 +12,8 @@ public class RentMapper {
                 .publicId(rentDto.getPublicId())
                 .userPublicId(rentDto.getUserPublicId())
                 .bookPublicId(rentDto.getBookPublicId())
+                .bookTitle(rentDto.getBookTitle())
+                .bookAuthors(rentDto.getBookAuthors())
                 .startDate(rentDto.getStartDate())
                 .endDate(rentDto.getEndDate())
                 .build();

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder(toBuilder = true)
@@ -15,6 +16,8 @@ public class RentDto {
     String publicId;
     String userPublicId;
     String bookPublicId;
+    String bookTitle;
+    List<String> bookAuthors;
     LocalDateTime startDate;
     LocalDateTime endDate;
 

@@ -109,6 +109,9 @@ public class PersistenceUtil {
         return (root, query, cb) -> {
             var predicates = new ArrayList<>();
 
+            Join<Rent, Book> bookJoin = root.join(RentConstants.BOOK.getValue());
+            bookJoin.join(BookConstants.AUTHORS_JOIN.getValue());
+
             if (userPublicId != null) {
                 predicates.add(cb.equal(root.get(RentConstants.PUBLIC_ID.getValue()), userPublicId));
             }
