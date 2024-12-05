@@ -64,4 +64,12 @@ public class OpenApiConfig {
                 .build();
     }
 
+    @Bean
+    public GroupedOpenApi rentApi() {
+        return GroupedOpenApi.builder()
+                .group("Rent")
+                .pathsToMatch("/v1/rents/**", "/v1/rents")
+                .build();
+    }
+
 }
