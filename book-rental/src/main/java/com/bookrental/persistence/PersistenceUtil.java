@@ -5,9 +5,11 @@ import com.bookrental.api.user.request.GetUserAccountParams;
 import com.bookrental.config.exceptions.BadRequestException;
 import com.bookrental.persistence.constants.AuthorConstants;
 import com.bookrental.persistence.constants.BookConstants;
+import com.bookrental.persistence.constants.RentConstants;
 import com.bookrental.persistence.constants.UserConstants;
 import com.bookrental.persistence.entity.Author;
 import com.bookrental.persistence.entity.Book;
+import com.bookrental.persistence.entity.Rent;
 import com.bookrental.persistence.entity.User;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
@@ -97,6 +99,18 @@ public class PersistenceUtil {
 
                 Join<Book, Author> join = root.join(BookConstants.AUTHORS_JOIN.getValue());
                 predicates.add(cb.in(join).value(subquery));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+    }
+
+    public Specification<Rent> buildRentListSpecification(String userPublicId) {
+        return (root, query, cb) -> {
+            var predicates = new ArrayList<>();
+
+            if (userPublicId != null) {
+                predicates.add(cb.equal(root.get(RentConstants.PUBLIC_ID.getValue()), userPublicId));
             }
 
             return cb.and(predicates.toArray(new Predicate[0]));
