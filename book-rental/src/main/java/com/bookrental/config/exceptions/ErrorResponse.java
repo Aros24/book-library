@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.Arrays;
 
 @Getter
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -22,10 +23,16 @@ public class ErrorResponse {
     @Schema(description = "The timestamp of when the error occurred")
     LocalDateTime timestamp;
 
-    public ErrorResponse(int statusCode, String message) {
+    @Schema(description = "Stack trace")
+    String[] stackTrace;
+
+    public ErrorResponse(int statusCode, String message, Throwable exception) {
         this.statusCode = statusCode;
         this.message = message;
         this.timestamp = ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime();
+        this.stackTrace = exception != null ? Arrays.stream(exception.getStackTrace())
+                .map(StackTraceElement::toString)
+                .toArray(String[]::new) : null;
     }
 
 }

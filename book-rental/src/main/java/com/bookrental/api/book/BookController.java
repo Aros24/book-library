@@ -64,9 +64,9 @@ public class BookController {
             @ApiResponse(responseCode = "404", description = "Book not found",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public ResponseEntity<Book> getBookByPublicId(@PathVariable String publicId) {
+    public Book getBookByPublicId(@PathVariable String publicId) {
         BookDto book = bookService.getBookByPublicId(publicId);
-        return ResponseEntity.ok(bookMapper.mapBookDtoToBook(book));
+        return bookMapper.mapBookDtoToBook(book);
     }
 
     @GetMapping

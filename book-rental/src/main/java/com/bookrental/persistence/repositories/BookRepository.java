@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
 
@@ -19,7 +20,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findAll(Specification<Book> specification, Pageable pageable);
 
     @Query("SELECT b FROM Book b LEFT JOIN FETCH b.authors WHERE b.publicId = :publicId")
-    Book findBookByPublicId(@Param("publicId") String publicId);
+    Optional<Book> findBookByPublicId(@Param("publicId") String publicId);
 
     @Query(value = "SELECT * FROM book WHERE isbn = :isbn", nativeQuery = true)
     Book findBookByIsbn(@Param("isbn") String isbn);

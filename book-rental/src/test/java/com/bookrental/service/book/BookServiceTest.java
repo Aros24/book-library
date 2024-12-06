@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -87,7 +88,7 @@ class BookServiceTest {
     void getBookByPublicId_shouldReturnBook() {
         // Given
         Book book = createBook();
-        when(bookRepository.findBookByPublicId(SAMPLE_PUBLIC_ID)).thenReturn(book);
+        when(bookRepository.findBookByPublicId(SAMPLE_PUBLIC_ID)).thenReturn(Optional.of(book));
 
         // When
         BookDto result = bookService.getBookByPublicId(SAMPLE_PUBLIC_ID);
@@ -101,7 +102,7 @@ class BookServiceTest {
     @Test
     void getBookByPublicId_shouldThrowExceptionWhenNotFound() {
         // Given
-        when(bookRepository.findBookByPublicId(SAMPLE_PUBLIC_ID)).thenReturn(null);
+        when(bookRepository.findBookByPublicId(SAMPLE_PUBLIC_ID)).thenReturn(Optional.empty());
 
         // When / Then
         assertThatThrownBy(() -> bookService.getBookByPublicId(SAMPLE_PUBLIC_ID))
@@ -152,7 +153,7 @@ class BookServiceTest {
         // Given
         int amount = 5;
         when(bookRepository.changeBookAmount(SAMPLE_PUBLIC_ID, amount)).thenReturn(1);
-        when(bookRepository.findBookByPublicId(SAMPLE_PUBLIC_ID)).thenReturn(createBook());
+        when(bookRepository.findBookByPublicId(SAMPLE_PUBLIC_ID)).thenReturn(Optional.of(createBook()));
 
         // When
         BookDto result = bookService.changeBookAmount(SAMPLE_PUBLIC_ID, amount);

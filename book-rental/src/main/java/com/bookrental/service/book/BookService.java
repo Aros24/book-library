@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.hibernate.type.descriptor.java.IntegerJavaType.ZERO;
 
@@ -63,11 +64,11 @@ public class BookService {
     }
 
     public BookDto getBookByPublicId(String publicId) {
-        Book book = bookRepository.findBookByPublicId(publicId);
-        if (book == null) {
+        Optional<Book> book = bookRepository.findBookByPublicId(publicId);
+        if (book.isEmpty()) {
             throw new ResourceNotFoundException("Book not found");
         }
-        return buildBook(book);
+        return buildBook(book.get());
     }
 
     public List<BookDto> getBooks(GetBookParams params) {
@@ -91,8 +92,18 @@ public class BookService {
         if (updatedRows == ZERO) {
             throw new ResourceNotFoundException("Book not found or amount is incorrect");
         }
-        Book book = bookRepository.findBookByPublicId(publicId);
-        return buildBook(book);
+
+        Optional<Book> book = bookRepository.findBookByPublicId(publicId);
+        if (book.isEmpty()) {
+            throw new ResourceNotFoundException("Book not found");
+        }
+
+        return buildBook(book.get());
+    }
+
+    public Book getBookRawEntityByPublicId(String publicId) {
+        return bookRepository.findBookByPublicId(publicId)
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
     }
 
     private BookDto buildBook(Book book) {
