@@ -80,5 +80,4 @@ class RentMapperTest {
         assertNull(rent.getEndDate());
     }
 
-
 }
