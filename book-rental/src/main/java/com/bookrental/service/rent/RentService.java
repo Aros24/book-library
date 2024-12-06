@@ -101,6 +101,7 @@ public class RentService {
                 .build();
     }
 
+    // DB level book amount constraint violation check. No clue how Spring maps this :) (not DataIntegrityViolationException / ConstraintViolationException)
     private boolean containsCheckConstraintException(RuntimeException e) {
         return e.getMessage().contains("Check constraint");
     }
