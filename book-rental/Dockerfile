@@ -13,8 +13,8 @@ COPY pom.xml .
 # Copy the project files into the container
 COPY src ./src
 
-# Package the application (this will create the .jar file in the target folder)
-RUN mvn clean package -DskipTests
+# Run tests and package the application (this will create the .jar file in the target folder)
+RUN mvn clean verify
 
 # Use a full JDK image for running the application (using the same OpenJDK version)
 FROM openjdk:21-jdk-slim
