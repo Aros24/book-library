@@ -13,10 +13,7 @@ import com.bookrental.persistence.entity.User;
 import com.bookrental.persistence.repositories.RentRepository;
 import com.bookrental.service.book.BookService;
 import com.bookrental.service.user.UserService;
-import jakarta.persistence.PersistenceException;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -54,8 +51,8 @@ public class RentService {
 
         try {
             return buildRent(rentDbAccessor.finishRentCreation(user, book));
-        } catch (Exception e) {
-            if (e.getMessage().contains("Check constraint")) {
+        } catch (RuntimeException e) {
+            if (containsCheckConstraintException(e)) {
                 throw new BadRequestException("Book cannot be rented!");
             }
             throw e;
@@ -102,6 +99,10 @@ public class RentService {
                 .startDate(rent.getStartDate())
                 .endDate(rent.getEndDate())
                 .build();
+    }
+
+    private boolean containsCheckConstraintException(RuntimeException e) {
+        return e.getMessage().contains("Check constraint");
     }
 
 }
