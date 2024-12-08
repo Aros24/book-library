@@ -14,13 +14,16 @@ RUN npm install
 COPY . .
 
 # Build the Angular app for production
-RUN npm run build
+RUN npm run build -- --output-path=dist/book-front --base-href /book-front/
 
 # Get nginx for web server
 FROM nginx:alpine
 
-# Copy the built Angular files from the previous stage into the Nginx HTML directory
-COPY --from=build /app/dist/book-rental-front/browser /usr/share/nginx/html
+# Copy the built Angular files
+COPY --from=build /app/dist/book-front/browser /usr/share/nginx/html/book-front
+
+# Copy the custom Nginx configuration file
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 80 to allow HTTP traffic to the Nginx server
 EXPOSE 80
