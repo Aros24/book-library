@@ -1,0 +1,25 @@
+.users-container {
+    padding: 20px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  table th, table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .edit-user-form label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .edit-user-form input, .edit-user-form select {
+    margin-left: 10px;
+  }
+  

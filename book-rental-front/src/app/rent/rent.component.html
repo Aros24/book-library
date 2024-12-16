@@ -1,0 +1,94 @@
+<div class="rent-container">
+  <!-- Loading State -->
+  <div *ngIf="loading">Loading...</div>
+  <div *ngIf="error">Error loading data. Please try again later.</div>
+
+  <!-- User View -->
+  <div *ngIf="userRole === 'basic' && !loading && !error">
+    <h2>My Rents</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Book Title</th>
+          <th>Authors</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let rent of rents">
+          <td>{{ rent.book_title }}</td>
+          <td>
+            <ul>
+              <li *ngFor="let author of rent.book_authors">{{ author }}</li>
+            </ul>
+          </td>
+          <td>{{ rent.start_date }}</td>
+          <td>{{ rent.end_date }}</td>
+          <td>
+            <button (click)="endRent(rent.public_id)">End Rent</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Admin View -->
+  <div *ngIf="userRole === 'admin' && !loading && !error">
+    <div *ngIf="!selectedUser">
+      <h2>All Users</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{ user.first_name }} {{ user.last_name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.role }}</td>
+            <td>
+              <button (click)="viewUserRents(user)">View Rents</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="selectedUser">
+      <h2>{{ selectedUser?.first_name }} {{ selectedUser?.last_name }}'s Rents</h2>
+      <button (click)="selectedUser = null">Back to User List</button>
+      <table>
+        <thead>
+          <tr>
+            <th>Book Title</th>
+            <th>Authors</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let rent of rents">
+            <td>{{ rent.book_title }}</td>
+            <td>
+              <ul>
+                <li *ngFor="let author of rent.book_authors">{{ author }}</li>
+              </ul>
+            </td>
+            <td>{{ rent.start_date }}</td>
+            <td>{{ rent.end_date }}</td>
+            <td>
+              <button (click)="endRent(rent.public_id)">End Rent</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

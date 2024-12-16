@@ -1,0 +1,59 @@
+.books-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.loading {
+  text-align: center;
+  color: #007bff;
+}
+
+.error {
+  text-align: center;
+  color: #f44336;
+}
+
+.no-books {
+  text-align: center;
+  color: #999;
+}
+
+.book-list {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.book-list th,
+.book-list td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.book-list th {
+  background-color: #f4f4f4;
+}
+.success-snackbar {
+  background-color: #4caf50; /* Green for success */
+  color: white;
+  font-size: 16px;
+  text-align: center;
+}
+
+.error-snackbar {
+  background-color: #f44336; /* Red for errors */
+  color: white;
+  font-size: 16px;
+  text-align: center;
+}
+
+.mat-snack-bar-container {
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}

@@ -1,5 +1,5 @@
 # The Node.js image for runtime
-FROM node:21 AS build
+FROM node:18 AS build
 
 # Set the working directory inside the container
 WORKDIR /app

@@ -1,0 +1,36 @@
+<div class="modal">
+    <h2>Add New Book</h2>
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input id="title" [(ngModel)]="title" type="text" required />
+    </div>
+    <div class="form-group">
+      <label for="isbn">ISBN</label>
+      <input id="isbn" [(ngModel)]="isbn" type="text" required />
+    </div>
+    <div class="form-group">
+      <label for="publication_year">Publication Year</label>
+      <input id="publication_year" [(ngModel)]="publication_year" type="number" required />
+    </div>
+    <div class="form-group">
+      <label for="publisher">Publisher</label>
+      <input id="publisher" [(ngModel)]="publisher" type="text" required />
+    </div>
+    <div class="form-group">
+      <label>Authors</label>
+      <div *ngFor="let author of authors">
+        <input
+          type="checkbox"
+          [value]="author.public_id"
+          (change)="toggleAuthorSelection(author)"
+        />
+        {{ author.name }} ({{ author.birth_year }})
+      </div>
+    </div>
+  
+    <div class="form-actions">
+      <button (click)="addBook()">Add Book</button>
+      <button (click)="bookAdded.emit()">Cancel</button>
+    </div>
+  </div>
+  

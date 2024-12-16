@@ -1,5 +1,33 @@
-<p>dashboard works!</p>
-<div class="dashboard-container">
-    <h1>Welcome to the Dashboard</h1>
-    <p>This is a placeholder for future dashboard content.</p>
+<div class="top-bar">
+  <div class="logo">Library</div>
+  <div class="search-bar">
+    <input type="text" placeholder="Search books, authors, rents...">
+  </div>
+  <div class="top-icons">
+    <i class="notification-icon">🔔</i>
+    <div class="user-profile">
+      <img src="user-avatar.png" alt="User Avatar">
+      <div class="dropdown">
+        <a href="#">My Rents</a>
+        <a href="#">My Settings</a>
+        <a href="#">Logout</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sidebar">
+  <li>
+    <a routerLink="books">📚Books</a>
+  </li>
+  <li>
+    <a routerLink="rents">📃Rents</a>
+  </li>
+  <li>
+    <a routerLink="users">👤Users</a>
+  </li>
+</div>
+
+<div class="main-content">
+  <router-outlet></router-outlet>
 </div>

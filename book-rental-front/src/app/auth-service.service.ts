@@ -1,43 +1,45 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private tokenExpirationTime: number = 5 * 60 * 1000;
-  private tokenRefreshTimeout: any;
+  private tokenKey = 'authToken';
+  private roleKey = 'userRole';
+  private publicId = 'publicId';
 
-  constructor(private router: Router) {}
-
-  saveToken(token: string) {
-    localStorage.setItem('token', token);
-    this.startTokenExpirationTimer();
+  saveToken(token: string): void {
+    localStorage.setItem(this.tokenKey, token);
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return localStorage.getItem(this.tokenKey);
   }
+
+  saveRole(role: string): void {
+    localStorage.setItem(this.roleKey, role);
+  }
+
+  getRole(): string | null {
+    return localStorage.getItem(this.roleKey);
+  }
+
+  savePublicUser(publicUser: string): void {
+    localStorage.setItem(this.publicId, publicUser);
+  }
+
+  getPublicUser(): string | null {
+    return localStorage.getItem(this.publicId);
+  }
+
 
   isTokenValid(): boolean {
     const token = this.getToken();
-    return !!token;
+    return token !== null && token !== '';
   }
 
-  startTokenExpirationTimer() {
-    if (this.tokenRefreshTimeout) {
-      clearTimeout(this.tokenRefreshTimeout);
-    }
-
-    this.tokenRefreshTimeout = setTimeout(() => {
-      alert('Your session has expired. Please log in again.');
-      this.logout();
-    }, this.tokenExpirationTime);
-  }
-
-  logout() {
-    localStorage.removeItem('token');
-    clearTimeout(this.tokenRefreshTimeout);
-    this.router.navigate(['/login']);
+  clearStorage(): void {
+    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.roleKey);
   }
 }

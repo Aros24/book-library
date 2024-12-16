@@ -1,53 +1,41 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .login-container,
-  .register-container {
-    max-width: 400px;
-    margin: 50px auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  h2 {
-    text-align: center;
-  }
-  
-  form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  div {
-    margin-bottom: 15px;
-  }
-  
-  label {
-    margin-bottom: 5px;
-    font-weight: bold;
-  }
-  
-  input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  button {
-    padding: 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
+.cdk-overlay-container {
+  position: fixed;
+  z-index: 1000; /* Ensure overlays appear above other content */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  display: flex; /* Use flexbox for alignment */
+  justify-content: center; /* Horizontally center snack bars */
+  align-items: flex-start; /* Align snack bars at the top */
+}
+
+/* Common styles for all snack bars */
+.error-snackbar {
+  max-width: 400px; /* Restrict the maximum width */
+  width: auto; /* Adjust width based on content */
+  margin: 16px auto; /* Center horizontally with a small margin */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+  text-align: center; /* Center-align text */
+  font-size: 16px; /* Standard font size */
+  z-index: 1000; /* Ensure it appears above other elements */
+}
+
+/* Success snack bar with specific background */
+.success-snackbar {
+  background-color: #4caf50; /* Green background */
+  color: white; /* White text */
+}
+
+/* Warning snack bar with specific background */
+.warning-snackbar {
+  background-color: #ffc107; /* Yellow background */
+  color: black; /* Black text */
+}
+
+/* Error snack bar with specific background */
+.error-snackbar {
+  background-color: #f44336; /* Red background */
+  color: white; /* White text */
+}

@@ -1,0 +1,59 @@
+<div class="users-container">
+    <div *ngIf="loading">Loading users...</div>
+    <div *ngIf="error">Error loading users. Please try again later.</div>
+      <table *ngIf="!loading && !editingUser">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.first_name }} {{ user.last_name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.role }}</td>
+          <td>{{ user.deleted ? 'Disabled' : 'Enabled' }}</td>
+          <td>
+            <button (click)="startEditingUser(user)">Edit</button>
+            <button (click)="toggleUserStatus(user)">
+              {{ user.deleted ? 'Enable' : 'Disable' }}
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+      <div *ngIf="editingUser" class="edit-user-form">
+      <h2>Edit User</h2>
+      <label>
+        First Name:
+        <input [(ngModel)]="editingUser.first_name" type="text" />
+      </label>
+      <label>
+        Last Name:
+        <input [(ngModel)]="editingUser.last_name" type="text" />
+      </label>
+      <label>
+        Email:
+        <input [(ngModel)]="editingUser.email" type="email" />
+      </label>
+      <label>
+        Role:
+        <select [(ngModel)]="editingUser.role">
+          <option value="basic">Basic</option>
+          <option value="admin">Admin</option>
+        </select>
+      </label>
+      <button (click)="saveEditedUser()">Save</button>
+      <button (click)="cancelEditing()">Cancel</button>
+    </div>
+      <div *ngIf="!editingUser">
+      <button (click)="previousPage()" [disabled]="page === 0">Previous</button>
+      <span>Page {{ page + 1 }}</span>
+      <button (click)="nextPage()" [disabled]="(page + 1) * size >= totalUsers">Next</button>
+    </div>
+  </div>
+  
