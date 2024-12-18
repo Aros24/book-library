@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../api.service';
 import { User } from '../models/user.model';
+import { UserToEdit } from '../models/userToEdit.model';
 
 @Component({
   selector: 'app-users',
@@ -20,6 +21,13 @@ export class UsersComponent implements OnInit {
   loading: boolean = true;
   error: boolean = false;
   editingUser: User | null = null;
+  onlyEditUser: UserToEdit = {
+    first_name: '',
+    last_name: '',
+    current_password: '',
+    new_password: '',
+  };
+
 
   page: number = 0;
   size: number = 10;
@@ -38,6 +46,7 @@ export class UsersComponent implements OnInit {
       .subscribe(
         (data) => {
           this.users = data || [];
+          this.error = false;
           this.loading = false;
         },
         (error) => {
@@ -72,20 +81,26 @@ export class UsersComponent implements OnInit {
 
   startEditingUser(user: User): void {
     this.editingUser = { ...user };
+    this.onlyEditUser = {
+      first_name: user.first_name,
+      last_name: user.last_name,
+      current_password: '',
+      new_password: '',
+    };
   }
 
   saveEditedUser(): void {
-    if (!this.editingUser) return;
+    if (!this.onlyEditUser.current_password || !this.onlyEditUser.new_password) {
+      this.showSnackBar('Current and New Password are required.', 'error-snackbar');
+      return;
+    }
 
     this.apiService
-      .patch(`/v1/users/${this.editingUser.public_id}`, this.editingUser)
+      .patch(`/v1/users/${this.editingUser?.public_id}`, this.onlyEditUser)
       .subscribe(
         () => {
-          this.showSnackBar(
-            `User ${this.editingUser?.first_name} ${this.editingUser?.last_name} updated successfully.`,
-            'success-snackbar'
-          );
-          this.editingUser = null;
+          this.showSnackBar('User updated successfully.', 'success-snackbar');
+          this.cancelEditing();
           this.loadUsers();
         },
         (error) => {
@@ -97,8 +112,14 @@ export class UsersComponent implements OnInit {
 
   cancelEditing(): void {
     this.editingUser = null;
+    this.onlyEditUser = {
+      first_name: '',
+      last_name: '',
+      current_password: '',
+      new_password: '',
+    };
   }
-  
+
   private showSnackBar(message: string, panelClass: string): void {
     this.snackBar.open(message, 'Close', {
       duration: 3000,

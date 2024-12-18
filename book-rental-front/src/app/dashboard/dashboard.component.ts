@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router, RouterOutlet } from '@angular/router';
 import { RouterModule } from '@angular/router';
 
 
@@ -11,4 +12,21 @@ import { RouterModule } from '@angular/router';
   encapsulation: ViewEncapsulation.None,
   standalone: true,
 })
-export class DashboardComponent {}
+export class DashboardComponent {
+  constructor(private router: Router, private snackBar: MatSnackBar) {}
+
+  ngOnInit(): void {}
+
+  logout(): void {
+    localStorage.clear();
+
+    this.snackBar.open('Successfully logged out', 'Close', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: ['success-snackbar'],
+    });
+
+    this.router.navigate(['/login']);
+  }
+}

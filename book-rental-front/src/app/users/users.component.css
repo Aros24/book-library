@@ -1,25 +1,174 @@
 .users-container {
-    padding: 20px;
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-  }
-  
-  table th, table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-  }
-  
-  .edit-user-form label {
-    display: block;
-    margin-bottom: 10px;
-  }
-  
-  .edit-user-form input, .edit-user-form select {
-    margin-left: 10px;
-  }
-  
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+  background: #f9f9f9; 
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
+h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+  text-align: center;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  background: #fff; 
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
+table th,
+table td {
+  border: 1px solid #ddd;
+  padding: 12px 10px;
+  text-align: left;
+  font-size: 14px;
+}
+
+table th {
+  background-color: #f1f1f1; 
+  color: #555;
+  text-transform: uppercase;
+}
+
+table td {
+  background-color: #fff; 
+  color: #333;
+}
+
+table tr:nth-child(even) {
+  background-color: #f9f9f9; 
+}
+
+button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-right: 5px; 
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+button.edit-button {
+  background-color: #2196f3; 
+  color: white;
+}
+
+button.edit-button:hover:not(:disabled) {
+  background-color: #1976d2;
+}
+
+button.toggle-button {
+  background-color: #4caf50; 
+  color: white;
+}
+
+button.toggle-button:hover:not(:disabled) {
+  background-color: #45a049;
+}
+
+button.cancel-button {
+  background-color: #f44336; 
+  color: white;
+}
+
+button.cancel-button:hover:not(:disabled) {
+  background-color: #d32f2f;
+}
+
+
+.pagination-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px; 
+  font-size: 14px; 
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.pagination-info {
+  margin: 0 10px; 
+  font-size: 14px;
+}
+
+.prev {
+  background: #4caf50; 
+}
+.prev:disabled {
+  background: #4caf50;
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+.next {
+  background: #f44336; 
+}
+.next:disabled {
+  background: #f44336; 
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.edit-user-form {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto; 
+}
+
+.edit-user-form label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #333;
+}
+
+.edit-user-form input,
+.edit-user-form select {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-top: 5px;
+}
+
+.edit-user-form button {
+  width: 48%;
+  margin-top: 20px;
+}
+
+.edit-user-form button:first-child {
+  background-color: #4caf50;
+}
+
+.edit-user-form button:last-child {
+  background-color: #f44336;
+}
+
+.fixed-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}

@@ -18,41 +18,48 @@ export class AddBookComponent {
   publication_year: number | null = null;
   publisher: string = '';
   selectedAuthors: { public_id: string; name: string }[] = [];
-  authors: { public_id: string; name: string; birth_year: number }[] = [];
+  authorSearchTerm: string = '';
+  authorSearchResults: { public_id: string; name: string; birth_year: number }[] = [];
 
   constructor(private apiService: ApiService) {}
 
-  ngOnInit(): void {
-    this.loadAuthors();
-  }
+  ngOnInit(): void {  }
 
-  loadAuthors(): void {
+  searchAuthors(): void {
+    if (this.authorSearchTerm.trim() === '') {
+      this.authorSearchResults = [];
+      return;
+    }
+
     this.apiService
       .get<{ public_id: string; name: string; birth_year: number }[]>('/v1/authors', {
+        name: this.authorSearchTerm,
+        size: 5,
         page: 1,
-        size: 4,
       })
       .subscribe(
         (data) => {
-          console.log('Authors loaded:', data);
-          this.authors = data;
+          this.authorSearchResults = data || [];
         },
         (error) => {
-          console.error('Error loading authors:', error);
+          console.error('Error searching authors:', error);
+          this.authorSearchResults = [];
         }
       );
   }
 
-  toggleAuthorSelection(author: { public_id: string; name: string }): void {
-    const index = this.selectedAuthors.findIndex(
-      (a) => a.public_id === author.public_id
-    );
-    if (index === -1) {
+  addAuthor(author: { public_id: string; name: string }): void {
+    if (!this.selectedAuthors.find((a) => a.public_id === author.public_id)) {
       this.selectedAuthors.push(author);
-    } else {
-      this.selectedAuthors.splice(index, 1);
     }
+    this.authorSearchResults = [];
+    this.authorSearchTerm = '';
   }
+
+  removeAuthor(author: { public_id: string; name: string }): void {
+    this.selectedAuthors = this.selectedAuthors.filter((a) => a.public_id !== author.public_id);
+  }
+
   addBook(): void {
     const payload = {
       title: this.title,

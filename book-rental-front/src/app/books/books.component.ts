@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, NgZone, ChangeDetectorRef  } from '@angular/core';
 import { CommonModule } from '@angular/common'; 
 import { AddBookComponent } from '../add-book/add-book.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -20,12 +20,14 @@ export class BooksComponent implements OnInit {
   error: boolean = false;
 
   page: number = 0;
-  size: number = 10;
+  size: number = 2;
   totalBooks: number = 200;
 
   showAddBookModal: boolean = false;
 
-  constructor(private apiService: ApiService, private snackBar: MatSnackBar) {}
+  coverLoadingStates: { [bookId: string]: boolean } = {};
+
+  constructor(private apiService: ApiService, private snackBar: MatSnackBar, private ngZone: NgZone, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.loadBooks();
@@ -39,7 +41,9 @@ export class BooksComponent implements OnInit {
       .subscribe(
         (data) => {
           this.books = data || [];
+          this.books.forEach((book) => (this.coverLoadingStates[book.public_id] = true));
           this.loading = false;
+          this.error = false;
         },
         (error) => {
           console.error('Error fetching books:', error);
@@ -127,7 +131,7 @@ export class BooksComponent implements OnInit {
   }
 
   nextPage(): void {
-    if ((this.page + 1) * this.size < this.totalBooks) {
+    if ((this.page + 1) * this.size < this.totalBooks && !this.error) {
       this.page++;
       this.loadBooks();
     }
@@ -138,6 +142,16 @@ export class BooksComponent implements OnInit {
       this.page--;
       this.loadBooks();
     }
+  }
+
+  handleImageLoad(bookId: string): void {
+    this.coverLoadingStates[bookId] = false;
+    this.cdr.detectChanges();
+  }
+
+  handleImageError(bookId: string): void {
+    this.coverLoadingStates[bookId] = false;
+    this.cdr.detectChanges();
   }
 
   getCoverUrl(isbn: string): string {

@@ -2,7 +2,6 @@
   <div class="form-container" [ngClass]="{ expanded: !isLoginMode }">
     <h2>{{ isLoginMode ? 'Login' : 'Register' }}</h2>
     <form #form="ngForm" (ngSubmit)="onSubmit(form)">
-      <!-- Register fields -->
       <div class="register-fields" *ngIf="!isLoginMode">
         <label for="first_name">First Name</label>
         <input
@@ -33,7 +32,6 @@
         </div>
       </div>
 
-      <!-- Email and Password fields -->
       <label for="email">Email</label>
       <input
         id="email"

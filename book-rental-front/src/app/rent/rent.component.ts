@@ -21,10 +21,13 @@ export class RentComponent implements OnInit {
   rents: Rent[] = [];
   users: User[] = [];
   selectedUser: User | null = null;
+  showModal: boolean = false;
 
   currentPage: number = 0;
-  pageSize: number = 5;
-  totalUsers: number = 0;
+  yourRentsPage: number = 0; 
+  pageSize: number = 1;
+  totalUsers: number = 200;
+  totalYourRents: number = 200;
 
   loading: boolean = true;
   error: boolean = false;
@@ -33,17 +36,16 @@ export class RentComponent implements OnInit {
 
   ngOnInit(): void {
     this.userRole = localStorage.getItem('userRole') || '';
-    this.userPublicId = localStorage.getItem('user_public_id') || '';
-    if (this.userRole === 'basic') {
-      this.loadUserRents(this.userPublicId);
-    } else if (this.userRole === 'admin') {
+    this.userPublicId = localStorage.getItem('publicId') || '';
+    this.loadUserRents(this.userPublicId, this.currentPage);
+    if (this.userRole === 'admin') {
       this.loadAllUsers();
     }
   }
 
-  loadUserRents(userId: string): void {
+  loadUserRents(userId: string, page: number): void {
     this.loading = true;
-    this.apiService.get<Rent[]>(`/v1/rents/user/${userId}`, { page: 0, size: 5 }).subscribe(
+    this.apiService.get<Rent[]>(`/v1/rents/user/${userId}`, { page: page, size: this.pageSize }).subscribe(
       async (rents) => {
         console.log('Rents fetched:', rents);
         this.rents = await Promise.all(
@@ -56,6 +58,7 @@ export class RentComponent implements OnInit {
           })
         );
         console.log('Rents with book details:', this.rents);
+        this.error = false;
         this.loading = false;
       },
       (error) => {
@@ -64,6 +67,34 @@ export class RentComponent implements OnInit {
         this.loading = false;
       }
     );
+  }
+
+  changeYourRentsPage(page: number): void {
+    if (page < 0) return;
+    this.yourRentsPage = page;
+    this.loadUserRents(this.userPublicId, page);
+  }
+
+  changeAllUsersPage(page: number): void {
+    if (page < 0) return;
+    this.currentPage = page;
+    this.loadAllUsers();
+  }
+
+  viewUserRents(user: User): void {
+    this.selectedUser = user;
+    this.loadUserRents(user.public_id, this.currentPage);
+    this.showModal = true;
+  }
+  
+  closeModal(): void {
+    this.showModal = false;
+    this.selectedUser = null;
+  }
+  
+  backToUserList(): void {
+    this.selectedUser = null;
+    this.rents = []; 
   }
 
   private async getBookDetails(bookId: string): Promise<Book | undefined> {
@@ -78,6 +109,7 @@ export class RentComponent implements OnInit {
         (data) => {
           console.log('Users fetched:', data);
           this.users = data || [];
+          this.error = false;
           this.loading = false;
         },
         (error) => {
@@ -92,17 +124,12 @@ export class RentComponent implements OnInit {
     this.apiService.patch(`/v1/rents/end/${rentId}`).subscribe(
       (response) => {
         console.log('Rent ended successfully:', response);
-        this.loadUserRents(this.selectedUser?.public_id || this.userPublicId);
+        this.loadUserRents(this.selectedUser?.public_id || this.userPublicId,this.currentPage);
       },
       (error) => {
         console.error('Error ending rent:', error);
       }
     );
-  }
-
-  viewUserRents(user: User): void {
-    this.selectedUser = user;
-    this.loadUserRents(user.public_id);
   }
 
   changePage(page: number): void {

@@ -1,33 +1,28 @@
 <div class="books-container">
   <h1>Books</h1>
 
-  <!-- Pagination Controls -->
   <div class="pagination">
-    <button (click)="previousPage()" [disabled]="page === 0">Previous</button>
-    <span>Page {{ page + 1 }}</span>
-    <button (click)="nextPage()" [disabled]="(page + 1) * size >= totalBooks">Next</button>
+    <button class="pagination-button prev" (click)="previousPage()" [disabled]="page === 0">
+      &larr; Previous
+    </button>
+    <span class="pagination-info">Page {{ page + 1 }}</span>
+    <button class="pagination-button next" (click)="nextPage()" [disabled]="(page + 1) * size >= totalBooks || error">
+      Next &rarr;
+    </button>
   </div>
 
-  <!-- Loading State -->
-  <div *ngIf="loading" class="loading">
-    Loading books...
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Loading books...</p>
   </div>
 
-  <!-- Error State -->
-  <div *ngIf="error" class="error">
-    Failed to load books. Please try again later.
-  </div>
-  <!-- Add Book Button -->
-  <button (click)="toggleAddBookModal()">Add New Book</button>
+  <div *ngIf="error" class="error">Failed to load books. Please try again later.</div>
 
-  <!-- Add Book Modal -->
-  <app-add-book
-    *ngIf="showAddBookModal"
-    (bookAdded)="onBookAdded()"
-  ></app-add-book>
+  <button class="add-book-button" (click)="toggleAddBookModal()">+ Add New Book</button>
 
-  <!-- Books List -->
-  <table *ngIf="!loading && books.length > 0" class="book-list">
+  <app-add-book *ngIf="showAddBookModal" (bookAdded)="onBookAdded()"></app-add-book>
+
+  <table *ngIf="!loading && !error && books.length > 0" class="book-list fixed-table">
     <thead>
       <tr>
         <th>Picture</th>
@@ -43,20 +38,33 @@
     <tbody>
       <tr *ngFor="let book of books">
         <td>
-          <img [src]="getCoverUrl(book.isbn)" alt="Book Cover" width="50">
+          <div class="cover-container">
+            <div *ngIf="coverLoadingStates[book.public_id]" class="cover-loading-spinner">
+            </div>
+            <img
+              [src]="getCoverUrl(book.isbn)"
+              [class.hidden]="coverLoadingStates[book.public_id]"
+              (load)="handleImageLoad(book.public_id)"
+              (error)="handleImageError(book.public_id)"
+              alt="Book Cover"
+              height="50"
+            />
+          </div>
         </td>
         <td>{{ book.title }}</td>
         <td>{{ book.isbn }}</td>
         <td>
-          <button (click)="changeAmount(book.public_id, book.amount - 1, book.amount)" [disabled]="book.amount <= 0">-</button>
-          <input 
-            type="number" 
-            [value]="book.amount" 
-            (change)="changeAmountFromEvent(book.public_id, $event, book.amount)" 
-            class="amount-input" 
-          />
-          <button (click)="changeAmount(book.public_id, book.amount + 1, book.amount)">+</button>
-        </td>        
+          <div class="amount-controls">
+            <button class="amount-button" (click)="changeAmount(book.public_id, book.amount - 1, book.amount)" [disabled]="book.amount <= 0">-</button>
+            <input 
+              type="number" 
+              [value]="book.amount" 
+              (change)="changeAmountFromEvent(book.public_id, $event, book.amount)" 
+              class="amount-input" 
+            />
+            <button class="amount-button" (click)="changeAmount(book.public_id, book.amount + 1, book.amount)">+</button>
+          </div>
+        </td>
         <td>{{ book.publication_year }}</td>
         <td>{{ book.publisher }}</td>
         <td>
@@ -67,19 +75,11 @@
           </ul>
         </td>
         <td>
-          <!-- Rent Book Button -->
-          <button 
-            (click)="rentBook(book.public_id, book.amount)" 
-            [disabled]="book.amount <= 0">
-            Rent Book
-          </button>
+          <button class="rent-button" (click)="rentBook(book.public_id, book.amount)" [disabled]="book.amount <= 0">Rent Book</button>
         </td>
       </tr>
     </tbody>
   </table>
 
-  <!-- No Books State -->
-  <div *ngIf="!loading && books.length === 0" class="no-books">
-    No books available.
-  </div>
+  <div *ngIf="!loading && books.length === 0" class="no-books">No books available.</div>
 </div>
