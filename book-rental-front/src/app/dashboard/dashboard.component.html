@@ -1,7 +1,26 @@
 <div class="top-bar">
   <div class="logo">Library</div>
   <div class="search-bar">
-    <input type="text" placeholder="Search books, authors, rents...">
+    <input
+      type="text"
+      placeholder="Search books, authors, rents..."
+      (input)="onInputChange($event)"
+      (keyup.enter)="onEnterPress()"
+    />
+  </div>
+  
+  <div class="search-results" *ngIf="searchResults.length > 0">
+    <div
+      *ngFor="let result of searchResults"
+      [ngClass]="{ 'book-result': result.type === 'book', 'author-result': result.type === 'author' }"
+    >
+      <ng-container *ngIf="result.type === 'book'">
+        <div>Book: {{ result.data.title }} by {{ result.data.publisher }}</div>
+      </ng-container>
+      <ng-container *ngIf="result.type === 'author'">
+        <div>Author: {{ result.data.name }}</div>
+      </ng-container>
+    </div>
   </div>
   <div class="top-icons">
     <i class="notification-icon">🔔</i>

@@ -10,12 +10,13 @@ import { SettingsComponent } from './settings/settings.component';
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent,
+  { path: 'dashboard', 
+    component: DashboardComponent,
+    canActivate: [AuthGuard],
     children:[
       { path: 'books', component: BooksComponent },
       { path: 'rents', component: RentComponent},
       { path: 'users', component: UsersComponent},
       { path: 'settings', component: SettingsComponent}
-  ] 
-},
+  ]},
 ];
