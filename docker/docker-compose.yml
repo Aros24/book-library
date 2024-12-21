@@ -5,7 +5,7 @@ services:
   book-rental:
     build: ../book-rental
     ports:
-      - "8080:8080" # Expose Spring app on port 8080
+      - "8080:8080"
     networks:
       - application-network
     depends_on:
@@ -24,11 +24,11 @@ services:
       MYSQL_DATABASE: book_rental_db
     volumes:
       - ./persistence:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql # Path to your .sql file
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - application-network
     ports:
-      - "3316:3316" # Expose MySQL on port 3316 for connections
+      - "3316:3316"
 
 # Angular Frontend
   book-rental-frontend:
