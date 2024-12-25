@@ -2,15 +2,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { ConfigService } from './config-service.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
+  constructor(private http: HttpClient, private configService: ConfigService) {}
 
-  private baseUrl = 'http://127.0.0.1:8080';
-
-  constructor(private http: HttpClient) {}
+  private get baseUrl(): string {
+    return this.configService.apiBaseUrl
+  }
 
   private getAuthHeaders(): HttpHeaders {
     const authToken = localStorage.getItem('authToken') || '';
@@ -19,7 +21,7 @@ export class ApiService {
     });
   }
 
-    // Generic GET method
+  // Generic GET method
   get<T>(endpoint: string, params: any = {}): Observable<T> {
     const headers = this.getAuthHeaders();
     return this.http

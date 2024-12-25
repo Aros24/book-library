@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root',
@@ -41,5 +42,6 @@ export class AuthService {
   clearStorage(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.roleKey);
+    localStorage.removeItem(this.publicId);
   }
 }

@@ -172,3 +172,31 @@ button.cancel-button:hover:not(:disabled) {
   border-collapse: collapse;
   margin-bottom: 20px;
 }
+
+table {
+  table-layout: fixed; /* Makes all columns take equal space */
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+  white-space: nowrap; 
+}
+
+th {
+  background-color: #f4f4f4;
+  color: #555;
+}
+
+td {
+  word-wrap: break-word;
+}
+
+tr:hover {
+  background-color: #f9f9f9;
+}
