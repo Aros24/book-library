@@ -53,12 +53,12 @@
       [(ngModel)]="password"
       name="password"
       required
-      minlength="6"
+      minlength="4"
       class="textbox"
       [ngClass]="{ 'invalid': form.submitted && !form.controls['password']?.valid }"
     />
     <div *ngIf="form.submitted && !form.controls['password']?.valid" class="error">
-      Password is required (minimum 6 characters).
+      Password is required (minimum 4 characters).
     </div>
 
       <button type="submit" class="submit-button">

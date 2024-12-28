@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { ApiService } from './api.service';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
@@ -8,31 +8,50 @@ export class AuthService {
   private tokenKey = 'authToken';
   private roleKey = 'userRole';
   private publicId = 'publicId';
+  private isBrowser: boolean;
+
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+  }
 
   saveToken(token: string): void {
-    localStorage.setItem(this.tokenKey, token);
+    if (this.isBrowser) {
+      localStorage.setItem(this.tokenKey, token);
+    }
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
+    if (this.isBrowser) {
+      return localStorage.getItem(this.tokenKey);
+    }
+    return null;
   }
 
   saveRole(role: string): void {
-    localStorage.setItem(this.roleKey, role);
+    if (this.isBrowser) {
+      localStorage.setItem(this.roleKey, role);
+    }
   }
 
   getRole(): string | null {
-    return localStorage.getItem(this.roleKey);
+    if (this.isBrowser) {
+      return localStorage.getItem(this.roleKey);
+    }
+    return null;
   }
 
   savePublicUser(publicUser: string): void {
-    localStorage.setItem(this.publicId, publicUser);
+    if (this.isBrowser) {
+      localStorage.setItem(this.publicId, publicUser);
+    }
   }
 
   getPublicUser(): string | null {
-    return localStorage.getItem(this.publicId);
+    if (this.isBrowser) {
+      return localStorage.getItem(this.publicId);
+    }
+    return null;
   }
-
 
   isTokenValid(): boolean {
     const token = this.getToken();
@@ -40,8 +59,10 @@ export class AuthService {
   }
 
   clearStorage(): void {
-    localStorage.removeItem(this.tokenKey);
-    localStorage.removeItem(this.roleKey);
-    localStorage.removeItem(this.publicId);
+    if (this.isBrowser) {
+      localStorage.removeItem(this.tokenKey);
+      localStorage.removeItem(this.roleKey);
+      localStorage.removeItem(this.publicId);
+    }
   }
 }

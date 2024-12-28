@@ -54,15 +54,24 @@
         <td>{{ book.title }}</td>
         <td>{{ book.isbn }}</td>
         <td>
-          <div class="amount-controls">
-            <button class="amount-button" (click)="changeAmount(book.public_id, book.amount - 1, book.amount)" [disabled]="book.amount <= 0">-</button>
+          <div class="amount-input-container">
+            <button 
+              class="amount-button" 
+              (click)="changeAmount(book.public_id, book.amount - 1, book.amount)" 
+              [disabled]="book.amount <= 0">
+              -
+            </button>
             <input 
+              class="amount-input" 
               type="number" 
               [value]="book.amount" 
-              (change)="changeAmountFromEvent(book.public_id, $event, book.amount)" 
-              class="amount-input" 
+              (change)="changeAmountFromEvent(book.public_id, $event, book.amount)"
             />
-            <button class="amount-button" (click)="changeAmount(book.public_id, book.amount + 1, book.amount)">+</button>
+            <button 
+              class="amount-button" 
+              (click)="changeAmount(book.public_id, book.amount + 1, book.amount)">
+              +
+            </button>
           </div>
         </td>
         <td>{{ book.publication_year }}</td>

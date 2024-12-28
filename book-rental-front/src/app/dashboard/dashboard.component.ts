@@ -5,8 +5,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, RouterOutlet } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { ApiService } from '../api.service';
-import { Book } from '../models/book.model';
-import { Author } from '../models/author.model';
 import { debounceTime, Subject } from 'rxjs';
 
 
@@ -23,6 +21,7 @@ export class DashboardComponent {
 
   searchQuery: string = '';
   searchResults: { type: 'book' | 'author'; data: any }[] = [];
+  selectedResult: { type: 'book' | 'author'; data: any } | null = null;
   searchInput$ = new Subject<string>();
 
   ngOnInit(): void {
@@ -110,14 +109,71 @@ export class DashboardComponent {
       });
   }
 
+  viewResultDetails(result: { type: 'book' | 'author'; data: any }): void {
+    this.selectedResult = result;
+  }
+
+  closeResultDetails(): void {
+    this.selectedResult = null;
+  }
+
+  getAuthorsList(authors: any[]): string {
+    return authors.map((author) => author.name).join(', ');
+  }
+
   clearSearchResults(): void {
     this.searchResults = [];
+  }
+
+  formatAuthors(authors: any[]): string {
+    return authors.map((author) => author.name).join(', ');
+  }
+
+  getCoverUrl(isbn: string): string {
+    return `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
+  }
+
+  rentBook(bookId: string, currentAmount: number): void {
+    const userPublicId = localStorage.getItem('publicId');
+    if (!userPublicId) {
+      console.error('User public ID is not set.');
+      return;
+    }
+
+    if (currentAmount <= 0) {
+      this.snackBar.open('Book cannot be rented. No copies available!', 'Close', {
+        duration: 3000,
+        panelClass: ['error-snackbar'],
+      });
+      return;
+    }
+
+    this.apiService.post(`/v1/rents/book/${bookId}/user/${userPublicId}`, null).subscribe(
+      () => {
+        this.snackBar.open('Book rented successfully!', 'Close', {
+          duration: 3000,
+          panelClass: ['success-snackbar'],
+        });
+      },
+      (error) => {
+        console.error('Error renting book:', error);
+        this.snackBar.open('Error renting the book. Please try again.', 'Close', {
+          duration: 3000,
+          panelClass: ['error-snackbar'],
+        });
+      }
+    );
   }
   
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
-    const clickedInside = this.elementRef.nativeElement.contains(event.target);
-    if (!clickedInside) {
+    const targetElement = event.target as HTMLElement;
+  
+    const clickedInsideSidebar = targetElement.closest('.sidebar');
+    const clickedInsideMainContent = targetElement.closest('.main-content');
+    const clickedInsideResultSearch = targetElement.closest('.result-details');
+  
+    if ((clickedInsideSidebar || clickedInsideMainContent) && !clickedInsideResultSearch) {
       this.clearSearchResults();
     }
   }

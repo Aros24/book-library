@@ -106,7 +106,7 @@ button.cancel-button:hover:not(:disabled) {
 
 .pagination-info {
   margin: 0 10px; 
-  font-size: 14px;
+  font-size: 18px;
 }
 
 .prev {
@@ -174,7 +174,7 @@ button.cancel-button:hover:not(:disabled) {
 }
 
 table {
-  table-layout: fixed; /* Makes all columns take equal space */
+  table-layout: fixed;
   width: 100%;
   border-collapse: collapse;
 }
@@ -199,4 +199,12 @@ td {
 
 tr:hover {
   background-color: #f9f9f9;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px; 
+  margin: 20px 0;
 }
