@@ -1,5 +1,96 @@
-<p>dashboard works!</p>
-<div class="dashboard-container">
-    <h1>Welcome to the Dashboard</h1>
-    <p>This is a placeholder for future dashboard content.</p>
+<div class="top-bar">
+  <div class="logo">Library</div>
+  <div class="search-bar">
+    <input
+      type="text"
+      placeholder="Search books, authors, rents..."
+      (input)="onInputChange($event)"
+      (keyup.enter)="onEnterPress()"
+    />
+  </div>
+  
+  <div class="search-results" *ngIf="searchResults.length > 0">
+    <div
+      *ngFor="let result of searchResults"
+      [ngClass]="{ 'book-result': result.type === 'book', 'author-result': result.type === 'author' }"
+      (click)="viewResultDetails(result)"
+    >
+      <ng-container *ngIf="result.type === 'book'">
+        <div>Book: {{ result.data.title }} by {{ result.data.publisher }}</div>
+      </ng-container>
+      <ng-container *ngIf="result.type === 'author'">
+        <div>Author: {{ result.data.name }}</div>
+      </ng-container>
+    </div>
+  </div>
+  <div class="top-icons">
+    <i class="notification-icon">🔔</i>
+    <div class="user-profile">
+      <img src="user-avatar.png" alt="User Avatar">
+      <div class="dropdown">
+        <a routerLink="rents">My Rents</a>
+        <a routerLink="settings">My Settings</a>
+        <a (click)="logout()" routerLink="login">Logout</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sidebar">
+  <ul>
+    <li>
+      <a routerLink="books">📚 Books</a>
+    </li>
+    <li>
+      <a routerLink="rents">📃 Rents</a>
+    </li>
+    <li>
+      <a routerLink="users">👤 Users</a>
+    </li>
+  </ul>
+</div>
+
+<div class="main-content">
+  <div class="dashboard-cards">
+    <div class="card">
+      <h3>Total Books</h3>
+      <p>500</p>
+    </div>
+    <div class="card">
+      <h3>Active Rents</h3>
+      <p>120</p>
+    </div>
+    <div class="card">
+      <h3>Registered Users</h3>
+      <p>300</p>
+    </div>
+  </div>
+  <div *ngIf="selectedResult" class="result-details">
+    <div class="result-header">
+      <h2 *ngIf="selectedResult.type === 'book'">Book Details</h2>
+      <h2 *ngIf="selectedResult.type === 'author'">Author Details</h2>
+      <button class="close-button" (click)="closeResultDetails()">X</button>
+    </div>
+    <div class="result-body">
+      <ng-container *ngIf="selectedResult.type === 'book'">
+        <img [src]="getCoverUrl(selectedResult.data.isbn)" alt="Book Cover" class="book-cover" />
+        <p>Title: {{ selectedResult.data.title }}</p>
+        <p>Publisher: {{ selectedResult.data.publisher }}</p>
+        <p *ngIf="selectedResult.data.authors">
+          Authors: {{ formatAuthors(selectedResult.data.authors) }}
+        </p>
+        <p>Amount Available: {{ selectedResult.data.amount }}</p>
+        <button *ngIf="selectedResult.data.amount > 0" (click)="rentBook(selectedResult.data.public_id, selectedResult.data.amount)">
+          Rent Book
+        </button>
+      </ng-container>
+      <ng-container *ngIf="selectedResult.type === 'author'">
+        <p>Name: {{ selectedResult.data.name }}</p>
+        <p>Birth Year: {{ selectedResult.data.birth_year }}</p>
+      </ng-container>
+    </div>
+  </div>
+  <div class="graphs">
+    <router-outlet></router-outlet>
+  </div>
 </div>

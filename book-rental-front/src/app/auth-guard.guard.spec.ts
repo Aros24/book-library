@@ -1,17 +1,44 @@
 import { TestBed } from '@angular/core/testing';
-import { CanActivateFn } from '@angular/router';
+import { Router } from '@angular/router';
+import { AuthGuard } from './auth-guard.guard';
+import { AuthService } from './auth-service.service';
+import { of } from 'rxjs';
 
-import { authGuardGuard } from './auth-guard.guard';
-
-describe('authGuardGuard', () => {
-  const executeGuard: CanActivateFn = (...guardParameters) => 
-      TestBed.runInInjectionContext(() => authGuardGuard(...guardParameters));
+describe('AuthGuard', () => {
+  let authGuard: AuthGuard;
+  let authServiceMock: jasmine.SpyObj<AuthService>;
+  let routerMock: jasmine.SpyObj<Router>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    authServiceMock = jasmine.createSpyObj('AuthService', ['isTokenValid']);
+    routerMock = jasmine.createSpyObj('Router', ['navigate']);
+
+    TestBed.configureTestingModule({
+      providers: [
+        AuthGuard,
+        { provide: AuthService, useValue: authServiceMock },
+        { provide: Router, useValue: routerMock },
+      ],
+    });
+
+    authGuard = TestBed.inject(AuthGuard);
   });
 
-  it('should be created', () => {
-    expect(executeGuard).toBeTruthy();
+  it('should allow activation if the token is valid', () => {
+    authServiceMock.isTokenValid.and.returnValue(true);
+
+    const result = authGuard.canActivate();
+
+    expect(result).toBeTrue();
+    expect(routerMock.navigate).not.toHaveBeenCalled();
+  });
+
+  it('should deny activation and navigate to login if the token is invalid', () => {
+    authServiceMock.isTokenValid.and.returnValue(false);
+
+    const result = authGuard.canActivate();
+
+    expect(result).toBeFalse();
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/login']);
   });
 });

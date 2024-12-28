@@ -1,11 +1,22 @@
-import { Component } from '@angular/core';
-import { LoginComponent } from './login/login.component';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { TokenValidationService } from './token-validation.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [LoginComponent],
-  template: `<app-login></app-login>`,
+  imports: [RouterOutlet],
+  template: `<router-outlet></router-outlet>`,
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent {}
+export class AppComponent implements OnInit, OnDestroy {
+  constructor(private tokenValidator: TokenValidationService) {}
+
+  ngOnInit(): void {
+    this.tokenValidator.startValidation();
+  }
+
+  ngOnDestroy(): void {
+    this.tokenValidator.stopValidation();
+  }
+}

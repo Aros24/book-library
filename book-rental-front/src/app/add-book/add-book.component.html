@@ -1,0 +1,66 @@
+<div class="modal">
+  <h2>Add New Book</h2>
+  <div class="form-group">
+    <label for="title">Title</label>
+    <input id="title" [(ngModel)]="title" type="text" placeholder="Enter book title" required />
+  </div>
+  <div class="form-group">
+    <label for="isbn">ISBN</label>
+    <input id="isbn" [(ngModel)]="isbn" type="text" placeholder="Enter ISBN" required />
+  </div>
+  <div class="form-group">
+    <label for="publication_year">Publication Year</label>
+    <input
+      id="publication_year"
+      [(ngModel)]="publication_year"
+      type="number"
+      placeholder="Enter publication year"
+      required
+    />
+  </div>
+  <div class="form-group">
+    <label for="publisher">Publisher</label>
+    <input
+      id="publisher"
+      [(ngModel)]="publisher"
+      type="text"
+      placeholder="Enter publisher name"
+      required
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="author-search">Search Authors</label>
+    <input
+      id="author-search"
+      [(ngModel)]="authorSearchTerm"
+      (input)="searchAuthors()"
+      type="text"
+      placeholder="Search for authors..."
+    />
+    <div class="dropdown" *ngIf="authorSearchResults.length > 0">
+      <div
+        class="dropdown-item"
+        *ngFor="let author of authorSearchResults"
+        (click)="addAuthor(author)"
+      >
+        {{ author.name }} ({{ author.birth_year }})
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group selected-authors" *ngIf="selectedAuthors.length > 0">
+    <label>Selected Authors:</label>
+    <ul>
+      <li *ngFor="let author of selectedAuthors">
+        {{ author.name }}
+        <button (click)="removeAuthor(author)">Remove</button>
+      </li>
+    </ul>
+  </div>
+
+  <div class="form-actions">
+    <button (click)="addBook()">Add Book</button>
+    <button (click)="bookAdded.emit()">Cancel</button>
+  </div>
+</div>

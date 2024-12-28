@@ -1,47 +1,123 @@
-import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { AuthService } from '../auth-service.service';
-import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-
+import { AuthService } from '../auth-service.service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ApiService } from '../api.service';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
   standalone: true,
-  imports: [FormsModule, HttpClientModule],
+  encapsulation: ViewEncapsulation.None,
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatSnackBarModule,
+  ],
 })
 export class LoginComponent {
   email: string = '';
   password: string = '';
+  firstName: string = '';
+  lastName: string = '';
+  isLoginMode: boolean = true;
 
   constructor(
-    private http: HttpClient, 
+    private router: Router,
     private authService: AuthService,
-    private router: Router
+    private snackBar: MatSnackBar,
+    private apiService: ApiService
   ) {}
 
-  onLogin() {
-    const loginPayload = { email: this.email, password: this.password };
+  toggleMode() {
+    this.isLoginMode = !this.isLoginMode;
+    alert(this.isLoginMode);
+  }
 
-    this.http.post('http://127.0.0.1:8080/auth/v1/login', loginPayload, { observe: 'response', withCredentials: true})
-    .subscribe(
-      (response: any) => {
-        const token = response.headers.get('Authorization'); // Get token from headers\
-        alert(token);
-        this.router.navigate(['/dashboard']);
-        if (token) {
-          this.authService.saveToken(token); // Save the token
-          alert('Login successful!');
-        } else {
-          alert('Login successful, but no token received.');
+  onSubmit(form: any) {
+    if (!form.valid) {
+      this.showSnackBar('Please fill out all required fields!', 'error-snackbar');
+      return;
+    }
+  
+    const payload = {
+      email: this.email,
+      password: this.password,
+    };
+    if(this.isLoginMode){
+      this.apiService.post<{ token: string; role: string; user_public_id: string }>('/auth/v1/login', payload, true).subscribe(
+        (response: HttpResponse<any>) => {
+          const headers = response.headers;
+      
+          const authorizationToken = headers.get('Authorization');
+      
+          const body = response.body;
+          const { role, user_public_id } = body;
+      
+          if (authorizationToken && role && user_public_id) {
+            this.authService.saveToken(authorizationToken);
+            this.authService.saveRole(role);
+            this.authService.savePublicUser(user_public_id);
+      
+            this.showSnackBar('Login successful!', 'success-snackbar');
+            this.router.navigate(['/dashboard']);
+          } else {
+            this.showSnackBar('Incomplete login response received!', 'warning-snackbar');
+          }
+        },
+        (error) => {
+          this.handleLoginError(error);
         }
-      },
-      (error) => {
-        alert('Login failed. Please check your credentials.');
-      }
-    );
+      );
+    }else{
+
+      const registerPayload = {
+        first_name: this.firstName,
+        last_name: this.lastName,
+        email: this.email,
+        password: this.password,
+      };
+    
+      this.apiService.post<{ token: string; role: string; user_public_id: string }>('/auth/v1/register', registerPayload, true).subscribe(
+        (response: HttpResponse<any>) => {
+          const body = response.body;
+          const { role, user_public_id } = body;
+      
+          if (role && user_public_id) {
+            this.showSnackBar('Register successful!', 'success-snackbar');
+            this.toggleMode();
+          } else {
+            this.showSnackBar('Incomplete register response received!', 'warning-snackbar');
+          }
+        },
+        (error) => {
+          this.handleLoginError(error);
+        }
+      );
+    }
+
+  }
+
+  private handleLoginError(error: any): void {
+    if (error.status === 400) {
+      this.showSnackBar('Invalid password. Please try again.', 'error-snackbar');
+    } else if (error.status === 404) {
+      this.showSnackBar('User not found. Please check your email.', 'error-snackbar');
+    } else {
+      this.showSnackBar('Login failed. Please check your credentials.', 'error-snackbar');
+    }
+  }
+
+  private showSnackBar(message: string, panelClass: string) {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: [panelClass],
+    });
   }
 }

@@ -1,0 +1,60 @@
+<div class="users-container">
+    <div *ngIf="loading">Loading users...</div>
+    <div *ngIf="error">Error loading users. Please try again later.</div>
+    <div class="pagination">
+    <button class="prev" (click)="previousPage()" [disabled]="page === 0">Previous</button>
+    <span class="pagination-info" >Page {{ page + 1 }} </span>
+    <button class="next" (click)="nextPage()" [disabled]="(page + 1) * size >= totalUsers || error">Next</button>
+    </div>
+    <div *ngIf="!error">
+      <br/>
+      <table class="fixed-table" *ngIf="!loading && !editingUser">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.first_name }} {{ user.last_name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.role }}</td>
+          <td>{{ user.deleted ? 'Disabled' : 'Enabled' }}</td>
+          <td>
+            <button class="edit-button" (click)="startEditingUser(user)">Edit</button>
+            <button class="toggle-button" (click)="toggleUserStatus(user)">
+              {{ user.deleted ? 'Enable' : 'Disable' }}
+            </button>
+          </td>          
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="editingUser" class="edit-user-form">
+      <h2>Edit User</h2>
+      <label>
+        First Name:
+        <input [(ngModel)]="onlyEditUser.first_name" type="text" placeholder="Enter first name" />
+      </label>
+      <label>
+        Last Name:
+        <input [(ngModel)]="onlyEditUser.last_name" type="text" placeholder="Enter last name" />
+      </label>
+      <label>
+        Current Password:
+        <input [(ngModel)]="onlyEditUser.current_password" type="password" placeholder="Enter current password" />
+      </label>
+      <label>
+        New Password:
+        <input [(ngModel)]="onlyEditUser.new_password" type="password" placeholder="Enter new password" />
+      </label>
+      <div class="form-actions">
+        <button (click)="saveEditedUser()">Save</button>
+        <button (click)="cancelEditing()" class="cancel-button">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

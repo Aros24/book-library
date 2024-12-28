@@ -1,0 +1,192 @@
+.rent-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9; 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  border-radius: 8px; 
+}
+
+h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333; 
+  text-align: center;
+  font-weight: bold;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  background-color: white; 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  border-radius: 8px;
+  overflow: hidden; 
+}
+
+table th,
+table td {
+  border: 1px solid #ddd;
+  padding: 12px; 
+  text-align: left;
+}
+
+table th {
+  background-color: #e0e0e0; 
+  color: #555; 
+  font-weight: bold;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-size: 14px;
+  color: #333;
+}
+
+
+.pagination .prev-button {
+  background-color: #007bff; 
+}
+
+.pagination .prev-button:hover:not(:disabled) {
+  background-color: #007bff;
+  transform: translateY(-2px);
+}
+
+.pagination .next-button {
+  background-color: #f44336; 
+}
+
+.pagination .next-button:hover:not(:disabled) {
+  background-color: #f44336;
+  transform: translateY(-2px);
+}
+
+button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+
+button.end-rent-button {
+  background-color: #007bff; 
+  color: white;
+}
+
+button.end-rent-button:hover:not(:disabled) {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.back-button {
+  margin-bottom: 20px;
+  background-color: #2196f3;
+}
+
+.back-button:hover {
+  background-color: #1976d2;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background: #ffffff;
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 20px;
+  width: 80%;
+  max-width: 600px;
+}
+
+.modal-content {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.close-button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  float: right;
+}
+
+.close-button:hover {
+  background-color: #d32f2f;
+}
+
+.modal table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: white;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal table th,
+.modal table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.modal table th {
+  background-color: #e0e0e0; 
+  color: #555;
+}
+
+.fixed-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.fixed-table th,
+.fixed-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fixed-table th {
+  background-color: #e0e0e0; 
+  color: #555;
+}
+
+.fixed-table td {
+  background-color: white;
+}

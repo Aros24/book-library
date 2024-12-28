@@ -1,27 +1,75 @@
-<div class="login-container">
-    <h2>Login</h2>
-    <form (ngSubmit)="onLogin()">
-      <div>
-        <label for="email">Email</label>
+<div class="container">
+  <div class="form-container" [ngClass]="{ expanded: !isLoginMode }">
+    <h2>{{ isLoginMode ? 'Login' : 'Register' }}</h2>
+    <form #form="ngForm" (ngSubmit)="onSubmit(form)">
+      <div class="register-fields" *ngIf="!isLoginMode">
+        <label for="first_name">First Name</label>
         <input
-          id="email"
-          type="email"
-          [(ngModel)]="email"
-          name="email"
+          id="first_name"
+          type="text"
+          [(ngModel)]="firstName"
+          name="first_name"
           required
+          class="textbox"
+          [ngClass]="{ 'invalid': form.submitted && !form.controls['first_name']?.valid }"
         />
-      </div>
-      <div>
-        <label for="password">Password</label>
+        <div *ngIf="form.submitted && !form.controls['first_name']?.valid" class="error">
+          First name is required.
+        </div>
+
+        <label for="last_name">Last Name</label>
         <input
-          id="password"
-          type="password"
-          [(ngModel)]="password"
-          name="password"
+          id="last_name"
+          type="text"
+          [(ngModel)]="lastName"
+          name="last_name"
           required
+          class="textbox"
+          [ngClass]="{ 'invalid': form.submitted && !form.controls['last_name']?.valid }"
         />
+        <div *ngIf="form.submitted && !form.controls['last_name']?.valid" class="error">
+          Last name is required.
+        </div>
       </div>
-      <button type="submit">Login</button>
+
+      <label for="email">Email</label>
+      <input
+        id="email"
+        type="email"
+        [(ngModel)]="email"
+        name="email"
+        required
+        class="textbox"
+        [ngClass]="{ 'invalid': form.submitted && !form.controls['email']?.valid }"
+      />
+      <div *ngIf="form.submitted && !form.controls['email']?.valid" class="error">
+        Email is required.
+      </div>
+
+      <label for="password">Password</label>
+      <input
+      id="password"
+      type="password"
+      [(ngModel)]="password"
+      name="password"
+      required
+      minlength="4"
+      class="textbox"
+      [ngClass]="{ 'invalid': form.submitted && !form.controls['password']?.valid }"
+    />
+    <div *ngIf="form.submitted && !form.controls['password']?.valid" class="error">
+      Password is required (minimum 4 characters).
+    </div>
+
+      <button type="submit" class="submit-button">
+        {{ isLoginMode ? 'Login' : 'Register' }}
+      </button>
     </form>
+    <p class="toggle-container">
+      {{ isLoginMode ? "Don't have an account?" : 'Already have an account?' }}
+      <button type="button" (click)="toggleMode()" class="toggle-button">
+        {{ isLoginMode ? 'Register' : 'Login' }}
+      </button>
+    </p>
   </div>
-  
+</div>

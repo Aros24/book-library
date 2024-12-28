@@ -1,0 +1,62 @@
+<div class="settings-container">
+    <h2>User Settings</h2>
+    
+    <form (ngSubmit)="updateSettings()">
+      <div class="form-group">
+        <label for="first_name">First Name</label>
+        <input
+          id="first_name"
+          [(ngModel)]="settingsForm.first_name"
+          name="first_name"
+          type="text"
+          placeholder="Enter your first name"
+          required
+        />
+      </div>
+  
+      <div class="form-group">
+        <label for="last_name">Last Name</label>
+        <input
+          id="last_name"
+          [(ngModel)]="settingsForm.last_name"
+          name="last_name"
+          type="text"
+          placeholder="Enter your last name"
+          required
+        />
+      </div>
+  
+      <div class="form-group">
+        <label for="current_password">Current Password</label>
+        <input
+          id="current_password"
+          [(ngModel)]="settingsForm.current_password"
+          name="current_password"
+          type="password"
+          placeholder="Enter your current password"
+          required
+        />
+      </div>
+  
+      <div class="form-group">
+        <label for="new_password">New Password</label>
+        <input
+          id="new_password"
+          [(ngModel)]="settingsForm.new_password"
+          name="new_password"
+          type="password"
+          placeholder="Enter your new password"
+        />
+      </div>
+  
+      <div class="form-actions">
+        <button type="submit" class="save-button">Save Changes</button>
+        <button type="button" class="cancel-button" (click)="resetForm()">Cancel</button>
+      </div>
+    </form>
+  
+    <div *ngIf="message" class="message" [ngClass]="{ 'success': success, 'error': !success }">
+      {{ message }}
+    </div>
+  </div>
+  

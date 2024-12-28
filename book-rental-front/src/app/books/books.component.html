@@ -1,0 +1,94 @@
+<div class="books-container">
+  <h1>Books</h1>
+
+  <div class="pagination">
+    <button class="pagination-button prev" (click)="previousPage()" [disabled]="page === 0">
+      &larr; Previous
+    </button>
+    <span class="pagination-info">Page {{ page + 1 }}</span>
+    <button class="pagination-button next" (click)="nextPage()" [disabled]="(page + 1) * size >= totalBooks || error">
+      Next &rarr;
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Loading books...</p>
+  </div>
+
+  <div *ngIf="error" class="error">Failed to load books. Please try again later.</div>
+
+  <button class="add-book-button" (click)="toggleAddBookModal()">+ Add New Book</button>
+
+  <app-add-book *ngIf="showAddBookModal" (bookAdded)="onBookAdded()"></app-add-book>
+
+  <table *ngIf="!loading && !error && books.length > 0" class="book-list fixed-table">
+    <thead>
+      <tr>
+        <th>Picture</th>
+        <th>Title</th>
+        <th>ISBN</th>
+        <th>Amount</th>
+        <th>Year</th>
+        <th>Publisher</th>
+        <th>Authors</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let book of books">
+        <td>
+          <div class="cover-container">
+            <div *ngIf="coverLoadingStates[book.public_id]" class="cover-loading-spinner">
+            </div>
+            <img
+              [src]="getCoverUrl(book.isbn)"
+              [class.hidden]="coverLoadingStates[book.public_id]"
+              (load)="handleImageLoad(book.public_id)"
+              (error)="handleImageError(book.public_id)"
+              alt="Book Cover"
+              height="50"
+            />
+          </div>
+        </td>
+        <td>{{ book.title }}</td>
+        <td>{{ book.isbn }}</td>
+        <td>
+          <div class="amount-input-container">
+            <button 
+              class="amount-button" 
+              (click)="changeAmount(book.public_id, book.amount - 1, book.amount)" 
+              [disabled]="book.amount <= 0">
+              -
+            </button>
+            <input 
+              class="amount-input" 
+              type="number" 
+              [value]="book.amount" 
+              (change)="changeAmountFromEvent(book.public_id, $event, book.amount)"
+            />
+            <button 
+              class="amount-button" 
+              (click)="changeAmount(book.public_id, book.amount + 1, book.amount)">
+              +
+            </button>
+          </div>
+        </td>
+        <td>{{ book.publication_year }}</td>
+        <td>{{ book.publisher }}</td>
+        <td>
+          <ul>
+            <li *ngFor="let author of book.authors">
+              {{ author.name }} ({{ author.birth_year }})
+            </li>
+          </ul>
+        </td>
+        <td>
+          <button class="rent-button" (click)="rentBook(book.public_id, book.amount)" [disabled]="book.amount <= 0">Rent Book</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && books.length === 0" class="no-books">No books available.</div>
+</div>
