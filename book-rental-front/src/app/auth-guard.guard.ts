@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { AuthService } from './auth-service.service';
 import { TokenValidationService } from './token-validation.service';
+import { TokenValidationService } from './token-validation.service';
 
 @Injectable({
   providedIn: 'root',

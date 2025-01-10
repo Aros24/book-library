@@ -16,6 +16,10 @@ import { AuthService } from '../auth-service.service';
   imports: [RouterOutlet, RouterModule, CommonModule, FormsModule],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
+  styleUrls: ['./dashboard.component.css'],
+  imports: [RouterOutlet, RouterModule, CommonModule, FormsModule],
+  encapsulation: ViewEncapsulation.None,
+  standalone: true,
 })
 export class DashboardComponent {
   constructor(private router: Router, private snackBar: MatSnackBar, private apiService: ApiService, private authService: AuthService, private elementRef: ElementRef) {}
