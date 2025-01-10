@@ -44,14 +44,14 @@
     <li>
       <a routerLink="rents">📃 Rents</a>
     </li>
-    <li>
+    <li *ngIf="isAdmin()">
       <a routerLink="users">👤 Users</a>
     </li>
   </ul>
 </div>
 
 <div class="main-content">
-  <div class="dashboard-cards">
+  <div class="dashboard-cards" *ngIf="isAdmin()">
     <div class="card">
       <h3>Total Books</h3>
       <p>500</p>

@@ -32,15 +32,14 @@
         <th>Year</th>
         <th>Publisher</th>
         <th>Authors</th>
-        <th>Actions</th>
+        <th *ngIf="isAdmin()">Actions</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let book of books">
         <td>
           <div class="cover-container">
-            <div *ngIf="coverLoadingStates[book.public_id]" class="cover-loading-spinner">
-            </div>
+            <div *ngIf="coverLoadingStates[book.public_id]" class="cover-loading-spinner"></div>
             <img
               [src]="getCoverUrl(book.isbn)"
               [class.hidden]="coverLoadingStates[book.public_id]"
@@ -55,21 +54,23 @@
         <td>{{ book.isbn }}</td>
         <td>
           <div class="amount-input-container">
-            <button 
-              class="amount-button" 
-              (click)="changeAmount(book.public_id, book.amount - 1, book.amount)" 
-              [disabled]="book.amount <= 0">
+            <button
+              class="amount-button"
+              (click)="changeAmount(book.public_id, book.amount - 1, book.amount)"
+              [disabled]="book.amount <= 0"
+            >
               -
             </button>
-            <input 
-              class="amount-input" 
-              type="number" 
-              [value]="book.amount" 
+            <input
+              class="amount-input"
+              type="number"
+              [value]="book.amount"
               (change)="changeAmountFromEvent(book.public_id, $event, book.amount)"
             />
-            <button 
-              class="amount-button" 
-              (click)="changeAmount(book.public_id, book.amount + 1, book.amount)">
+            <button
+              class="amount-button"
+              (click)="changeAmount(book.public_id, book.amount + 1, book.amount)"
+            >
               +
             </button>
           </div>
@@ -83,12 +84,40 @@
             </li>
           </ul>
         </td>
-        <td>
-          <button class="rent-button" (click)="rentBook(book.public_id, book.amount)" [disabled]="book.amount <= 0">Rent Book</button>
+        <td *ngIf="isAdmin()">
+          <button class="rent-button" (click)="openRentModal(book, $event)" [disabled]="book.amount <= 0">Rent Book</button>
         </td>
       </tr>
     </tbody>
   </table>
 
   <div *ngIf="!loading && books.length === 0" class="no-books">No books available.</div>
+
+  <div class="rent-context-menu" *ngIf="rentModalOpen" [style.top.px]="menuPosition.top" [style.left.px]="menuPosition.left">
+    <div class="context-header">
+      <h3>Rent Book: {{ selectedBook?.title }}</h3>
+      <button class="close-button" (click)="closeRentModal()">X</button>
+    </div>
+    <div class="context-body">
+      <input
+        class="search-input"
+        type="text"
+        placeholder="Search user..."
+        (keyup.enter)="onSearchInputEnter($event)"
+      />
+      <ul class="user-list">
+        <li 
+          *ngFor="let user of userSearchResults" 
+          (click)="selectUser(user)" 
+          [ngClass]="{ 'selected-user': user.public_id === selectedUserId }"
+        >
+          {{ user.first_name }} {{ user.last_name }} ({{ user.email }})
+        </li>
+      </ul>
+    </div>
+    <div class="context-footer">
+      <button class="confirm-button" (click)="confirmRent()">Confirm Rent</button>
+      <button class="cancel-button" (click)="closeRentModal()">Cancel</button>
+    </div>
+  </div>
 </div>

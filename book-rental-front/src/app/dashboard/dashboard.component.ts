@@ -6,6 +6,7 @@ import { Router, RouterOutlet } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { ApiService } from '../api.service';
 import { debounceTime, Subject } from 'rxjs';
+import { AuthService } from '../auth-service.service';
 
 
 @Component({
@@ -17,7 +18,7 @@ import { debounceTime, Subject } from 'rxjs';
   standalone: true,
 })
 export class DashboardComponent {
-  constructor(private router: Router, private snackBar: MatSnackBar, private apiService: ApiService, private elementRef: ElementRef) {}
+  constructor(private router: Router, private snackBar: MatSnackBar, private apiService: ApiService, private authService: AuthService, private elementRef: ElementRef) {}
 
   searchQuery: string = '';
   searchResults: { type: 'book' | 'author'; data: any }[] = [];
@@ -28,6 +29,10 @@ export class DashboardComponent {
     this.searchInput$
     .pipe(debounceTime(300))
     .subscribe((query) => this.performSearch(query));
+  }
+
+  isAdmin(): boolean {
+    return this.authService.getRole() == 'admin'
   }
 
   logout(): void {

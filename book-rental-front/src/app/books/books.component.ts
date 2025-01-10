@@ -5,6 +5,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ApiService } from '../api.service';
 import { Book } from '../models/book.model';
+import { User } from '../models/user.model';
+import { AuthService } from '../auth-service.service';
 
 @Component({
   selector: 'app-books',
@@ -19,6 +21,14 @@ export class BooksComponent implements OnInit {
   loading: boolean = true;
   error: boolean = false;
 
+  searchQuery: string = '';
+  rentModalOpen: boolean = false;
+  selectedBook: Book | null = null;
+  userSearchResults: any[] = [];
+  selectedUser: User | null = null;
+  menuPosition = { top: 0, left: 0 };
+  selectedUserId: string | null = null;
+
   page: number = 0;
   size: number = 2;
   totalBooks: number = 200;
@@ -27,10 +37,14 @@ export class BooksComponent implements OnInit {
 
   coverLoadingStates: { [bookId: string]: boolean } = {};
 
-  constructor(private apiService: ApiService, private snackBar: MatSnackBar, private ngZone: NgZone, private cdr: ChangeDetectorRef) {}
+  constructor(private apiService: ApiService, private snackBar: MatSnackBar, private authService: AuthService, private ngZone: NgZone, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.loadBooks();
+  }
+
+  isAdmin(): boolean {
+    return this.authService.getRole() == 'admin'
   }
 
   loadBooks(): void {
@@ -128,6 +142,76 @@ export class BooksComponent implements OnInit {
   onBookAdded(): void {
     this.showAddBookModal = false;
     this.loadBooks();
+  }
+
+  openRentModal(book: Book, event: MouseEvent): void {
+    this.selectedBook = book;
+    this.rentModalOpen = true;
+    this.userSearchResults = [];
+    this.selectedUser = null;
+
+    this.menuPosition = {
+      top: event.clientY - 50,
+      left: event.clientX - 300,
+    };
+  }
+
+  closeRentModal(): void {
+    this.rentModalOpen = false;
+    this.selectedBook = null;
+    this.userSearchResults = [];
+  }
+
+  onSearchInputEnter(event: Event): void {
+    alert(1);
+    const input = event.target as HTMLInputElement;
+    const query = input.value.trim();
+    if (query.trim().length > 0) {
+      this.searchUsers(query.trim());
+    }
+  }
+
+  searchUsers(query: string): void {
+    this.apiService
+      .get<any[]>('/v1/users/accounts', { firstName: query, page: 0, size: 5 })
+      .subscribe(
+        (results) => {
+          this.userSearchResults = results;
+          this.cdr.detectChanges();
+        },
+        (error) => {
+          console.error('Error fetching users:', error);
+          this.userSearchResults = [];
+        }
+      );
+  }
+
+  selectUser(user: any): void {
+    this.selectedUser = user;
+    this.selectedUserId = user.public_id;
+  }
+
+  confirmRent(): void {
+    alert(this.selectedBook?.title)
+    alert(this.selectedUser?.first_name)
+    if (!this.selectedBook || !this.selectedUser) {
+      this.showSnackBar('Select a user to rent the book.', 'error-snackbar');
+      return;
+    }
+
+    this.apiService
+      .post(`/v1/rents/book/${this.selectedBook.public_id}/user/${this.selectedUser.public_id}`, null)
+      .subscribe(
+        () => {
+          this.showSnackBar('Book rented successfully!', 'success-snackbar');
+          this.closeRentModal();
+          this.loadBooks();
+        },
+        (error) => {
+          console.error('Error renting book:', error);
+          this.showSnackBar('Failed to rent the book. Please try again.', 'error-snackbar');
+        }
+      );
   }
 
   nextPage(): void {

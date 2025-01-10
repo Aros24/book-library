@@ -25,7 +25,7 @@ export class RentComponent implements OnInit {
 
   currentPage: number = 0;
   yourRentsPage: number = 0; 
-  pageSize: number = 1;
+  pageSize: number = 5;
   totalUsers: number = 200;
   totalYourRents: number = 200;
 
@@ -62,8 +62,12 @@ export class RentComponent implements OnInit {
         this.loading = false;
       },
       (error) => {
-        console.error('Error fetching rents:', error);
-        this.error = true;
+        if (error.status === 404) {
+          this.rents = [];
+          this.error = false;
+        } else {
+          this.error = true;
+        }
         this.loading = false;
       }
     );

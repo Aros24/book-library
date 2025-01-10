@@ -10,13 +10,20 @@ import { SettingsComponent } from './settings/settings.component';
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'dashboard', 
+  { 
+    path: 'dashboard', 
     component: DashboardComponent,
     canActivate: [AuthGuard],
-    children:[
+    children: [
       { path: 'books', component: BooksComponent },
-      { path: 'rents', component: RentComponent},
-      { path: 'users', component: UsersComponent},
-      { path: 'settings', component: SettingsComponent}
-  ]},
+      { path: 'rents', component: RentComponent },
+      { 
+        path: 'users', 
+        component: UsersComponent, 
+        canActivate: [AuthGuard], 
+        data: { roles: ['admin'] }
+      },
+      { path: 'settings', component: SettingsComponent },
+    ]
+  },
 ];
