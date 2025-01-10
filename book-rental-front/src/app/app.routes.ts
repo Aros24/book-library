@@ -6,10 +6,6 @@ import { BooksComponent } from './books/books.component';
 import { RentComponent } from './rent/rent.component';
 import { UsersComponent } from './users/users.component';
 import { SettingsComponent } from './settings/settings.component';
-import { BooksComponent } from './books/books.component';
-import { RentComponent } from './rent/rent.component';
-import { UsersComponent } from './users/users.component';
-import { SettingsComponent } from './settings/settings.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
