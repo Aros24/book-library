@@ -44,14 +44,14 @@
     <li>
       <a routerLink="rents">📃 Rents</a>
     </li>
-    <li>
+    <li *ngIf="isAdmin()">
       <a routerLink="users">👤 Users</a>
     </li>
   </ul>
 </div>
 
 <div class="main-content">
-  <div class="dashboard-cards">
+  <div class="dashboard-cards" *ngIf="isAdmin()">
     <div class="card">
       <h3>Total Books</h3>
       <p>500</p>
@@ -73,16 +73,39 @@
     </div>
     <div class="result-body">
       <ng-container *ngIf="selectedResult.type === 'book'">
-        <img [src]="getCoverUrl(selectedResult.data.isbn)" alt="Book Cover" class="book-cover" />
+        <img [src]="getCoverUrl(selectedResult.data.isbn)" (load)="checkCoverSize($event)" alt="Book Cover" class="book-cover" />
         <p>Title: {{ selectedResult.data.title }}</p>
         <p>Publisher: {{ selectedResult.data.publisher }}</p>
         <p *ngIf="selectedResult.data.authors">
           Authors: {{ formatAuthors(selectedResult.data.authors) }}
         </p>
         <p>Amount Available: {{ selectedResult.data.amount }}</p>
-        <button *ngIf="selectedResult.data.amount > 0" (click)="rentBook(selectedResult.data.public_id, selectedResult.data.amount)">
-          Rent Book
-        </button>
+        
+        <div *ngIf="selectedResult.data.amount > 0 && isAdmin()" class="rent-section">
+          <input
+            class="search-user-input"
+            type="text"
+            placeholder="Search for user"
+            [(ngModel)]="userSearchTerm"
+            (input)="onUserSearchInputChange()"
+          />
+          <ul class="user-search-results">
+            <li
+              *ngFor="let user of userSearchResults"
+              (click)="selectUserForRent(user)"
+              [class.selected]="user.public_id === selectedUser?.public_id"
+            >
+              {{ user.first_name }} {{ user.last_name }} ({{ user.email }})
+            </li>
+          </ul>
+          <button
+            class="rent-button"
+            [disabled]="!selectedUser"
+            (click)="confirmRentBook(selectedResult.data.public_id)"
+          >
+            Rent Book for Selected User
+          </button>
+        </div>
       </ng-container>
       <ng-container *ngIf="selectedResult.type === 'author'">
         <p>Name: {{ selectedResult.data.name }}</p>
@@ -94,3 +117,4 @@
     <router-outlet></router-outlet>
   </div>
 </div>
+

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { AuthService } from './auth-service.service';
 import { TokenValidationService } from './token-validation.service';
 
@@ -13,10 +13,16 @@ export class AuthGuard implements CanActivate {
     private tokenValidator: TokenValidationService
   ) {}
 
-  async canActivate(): Promise<boolean> {
+  async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
     const isTokenValid = await this.tokenValidator.validateTokenOnDemand();
+    const userRole = this.authService.getRole() || '';
 
     if (this.authService.isTokenValid() && isTokenValid) {
+      const allowedRoles = route.data['roles'] as string[];
+      if (allowedRoles && !allowedRoles.includes(userRole)) {
+        this.router.navigate(['/dashboard/books']);
+        return false;
+      }
       return true;
     } else {
       this.router.navigate(['/login']);

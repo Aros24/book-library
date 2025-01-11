@@ -6,6 +6,7 @@ import { Router, RouterOutlet } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { ApiService } from '../api.service';
 import { debounceTime, Subject } from 'rxjs';
+import { AuthService } from '../auth-service.service';
 
 
 @Component({
@@ -17,17 +18,82 @@ import { debounceTime, Subject } from 'rxjs';
   standalone: true,
 })
 export class DashboardComponent {
-  constructor(private router: Router, private snackBar: MatSnackBar, private apiService: ApiService, private elementRef: ElementRef) {}
+  constructor(private router: Router, private snackBar: MatSnackBar, private apiService: ApiService, private authService: AuthService, private elementRef: ElementRef) {}
 
   searchQuery: string = '';
   searchResults: { type: 'book' | 'author'; data: any }[] = [];
   selectedResult: { type: 'book' | 'author'; data: any } | null = null;
   searchInput$ = new Subject<string>();
 
+  userSearchTerm: string = '';
+  userSearchResults: any[] = [];
+  selectedUser: any | null = null;
+  userSearchDebounce: Subject<string> = new Subject<string>();
+  
+
   ngOnInit(): void {
-    this.searchInput$
-    .pipe(debounceTime(300))
-    .subscribe((query) => this.performSearch(query));
+    this.userSearchDebounce.pipe(debounceTime(300)).subscribe((term) => {
+      if (term) {
+        this.searchUsers(term);
+      } else {
+        this.userSearchResults = [];
+      }
+    });
+  }
+
+  onUserSearchInputChange(): void {
+    this.userSearchDebounce.next(this.userSearchTerm);
+  }
+  
+  searchUsers(term: string): void {
+    this.apiService.get<any[]>('/v1/users/accounts', { firstName: term, page: 0, size: 5 }).subscribe(
+      (users: any[]) => {
+        this.userSearchResults = users;
+      },
+      (error) => {
+        console.error('Error fetching users:', error);
+        this.userSearchResults = [];
+      }
+    );
+  }
+  
+  selectUserForRent(user: any): void {
+    this.selectedUser = user;
+  }
+  
+  confirmRentBook(bookId: string): void {
+    if (!this.selectedUser) return;
+  
+    this.apiService.post(`/v1/rents/book/${bookId}/user/${this.selectedUser.public_id}`, {}).subscribe(
+      () => {
+        this.snackBar.open('Book rented successfully!', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['success-snackbar'],
+        });
+        this.clearUserSelection();
+      },
+      (error) => {
+        console.error('Error renting book:', error);
+        this.snackBar.open('Error renting book. Please try again.', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['error-snackbar'],
+        });
+      }
+    );
+  }
+  
+  clearUserSelection(): void {
+    this.userSearchTerm = '';
+    this.userSearchResults = [];
+    this.selectedUser = null;
+  }
+
+  isAdmin(): boolean {
+    return this.authService.getRole() == 'admin'
   }
 
   logout(): void {
@@ -131,6 +197,13 @@ export class DashboardComponent {
 
   getCoverUrl(isbn: string): string {
     return `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
+  }
+
+  checkCoverSize(event: Event): void {
+    const imgElement = event.target as HTMLImageElement;
+    if (imgElement.naturalWidth < 5 && imgElement.naturalHeight < 5) {
+      imgElement.src = 'book-cover-placeholder.png';
+    }
   }
 
   rentBook(bookId: string, currentAmount: number): void {

@@ -5,6 +5,7 @@ import { ApiService } from '../api.service';
 import { Rent } from '../models/rent.model';
 import { User } from '../models/user.model';
 import { Book } from '../models/book.model';
+import { AuthService } from '../auth-service.service';
 
 @Component({
   selector: 'app-rent',
@@ -25,14 +26,14 @@ export class RentComponent implements OnInit {
 
   currentPage: number = 0;
   yourRentsPage: number = 0; 
-  pageSize: number = 1;
+  pageSize: number = 5;
   totalUsers: number = 200;
   totalYourRents: number = 200;
 
   loading: boolean = true;
   error: boolean = false;
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.userRole = localStorage.getItem('userRole') || '';
@@ -62,8 +63,12 @@ export class RentComponent implements OnInit {
         this.loading = false;
       },
       (error) => {
-        console.error('Error fetching rents:', error);
-        this.error = true;
+        if (error.status === 404) {
+          this.rents = [];
+          this.error = false;
+        } else {
+          this.error = true;
+        }
         this.loading = false;
       }
     );
@@ -136,4 +141,9 @@ export class RentComponent implements OnInit {
     this.currentPage = page;
     this.loadAllUsers();
   }
+
+  isAdmin(): boolean {
+    return this.authService.getRole() == 'admin'
+  }
+
 }

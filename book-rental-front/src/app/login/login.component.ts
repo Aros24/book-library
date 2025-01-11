@@ -64,7 +64,7 @@ export class LoginComponent {
             this.authService.savePublicUser(user_public_id);
       
             this.showSnackBar('Login successful!', 'success-snackbar');
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(['/dashboard/books']);
           } else {
             this.showSnackBar('Incomplete login response received!', 'warning-snackbar');
           }

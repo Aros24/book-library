@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from './auth-service.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,8 @@ export class TokenValidationService {
   constructor(
     private apiService: ApiService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private authService: AuthService
   ) {}
 
   startValidation(): void {
@@ -60,11 +62,13 @@ export class TokenValidationService {
   private handleInvalidToken(): void {
     this.stopValidation();
     localStorage.clear();
-    this.snackBar.open('Session expired. Please log in again.', 'Close', {
-      duration: 3000,
-      horizontalPosition: 'center',
-      verticalPosition: 'top',
-    });
+    if(this.authService.getToken() != null){
+      this.snackBar.open('Session expired. Please log in again.', 'Close', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+      });
+    }
     this.router.navigate(['/login']);
   }
 }
