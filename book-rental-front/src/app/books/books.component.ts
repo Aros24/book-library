@@ -228,8 +228,14 @@ export class BooksComponent implements OnInit {
     }
   }
 
-  handleImageLoad(bookId: string): void {
+  handleImageLoad(bookId: string, event: Event): void {
     this.coverLoadingStates[bookId] = false;
+
+    const imgElement = event.target as HTMLImageElement;
+    if (imgElement.naturalWidth < 5 && imgElement.naturalHeight < 5) {
+      imgElement.src = 'book-cover-placeholder.png';
+    }
+    
     this.cdr.detectChanges();
   }
 
@@ -241,5 +247,11 @@ export class BooksComponent implements OnInit {
   getCoverUrl(isbn: string): string {
     const cleanedIsbn = isbn.replace(/-/g, '');
     return `https://covers.openlibrary.org/b/isbn/${cleanedIsbn}-M.jpg`;
+  }
+  checkCoverSize(event: Event): void {
+    const imgElement = event.target as HTMLImageElement;
+    if (imgElement.naturalWidth < 5 && imgElement.naturalHeight < 5) {
+      imgElement.src = 'book-cover-placeholder.png';
+    }
   }
 }

@@ -5,6 +5,7 @@ import { ApiService } from '../api.service';
 import { Rent } from '../models/rent.model';
 import { User } from '../models/user.model';
 import { Book } from '../models/book.model';
+import { AuthService } from '../auth-service.service';
 
 @Component({
   selector: 'app-rent',
@@ -32,7 +33,7 @@ export class RentComponent implements OnInit {
   loading: boolean = true;
   error: boolean = false;
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.userRole = localStorage.getItem('userRole') || '';
@@ -140,4 +141,9 @@ export class RentComponent implements OnInit {
     this.currentPage = page;
     this.loadAllUsers();
   }
+
+  isAdmin(): boolean {
+    return this.authService.getRole() == 'admin'
+  }
+
 }

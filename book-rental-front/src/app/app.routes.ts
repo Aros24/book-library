@@ -8,7 +8,7 @@ import { UsersComponent } from './users/users.component';
 import { SettingsComponent } from './settings/settings.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: '/dashboard/books', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { 
     path: 'dashboard', 

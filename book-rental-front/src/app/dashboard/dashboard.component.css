@@ -268,7 +268,6 @@ body {
 
 .search-results div {
   padding: 10px 15px;
-  border-bottom: 1px solid #f0f0f0;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
@@ -280,11 +279,13 @@ body {
 .book-result {
   color: #4caf50;
   font-weight: bold;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .author-result {
   color: #2196f3;
   font-weight: bold;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .search-results::after {
@@ -402,7 +403,6 @@ button:hover {
   background-color: #45a049;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .search-bar {
     width: 90%;

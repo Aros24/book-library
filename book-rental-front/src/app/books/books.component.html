@@ -18,7 +18,7 @@
 
   <div *ngIf="error" class="error">Failed to load books. Please try again later.</div>
 
-  <button class="add-book-button" (click)="toggleAddBookModal()">+ Add New Book</button>
+  <button *ngIf="isAdmin()" class="add-book-button" (click)="toggleAddBookModal()">+ Add New Book</button>
 
   <app-add-book *ngIf="showAddBookModal" (bookAdded)="onBookAdded()"></app-add-book>
 
@@ -43,7 +43,7 @@
             <img
               [src]="getCoverUrl(book.isbn)"
               [class.hidden]="coverLoadingStates[book.public_id]"
-              (load)="handleImageLoad(book.public_id)"
+              (load)="handleImageLoad(book.public_id,$event)"
               (error)="handleImageError(book.public_id)"
               alt="Book Cover"
               height="50"
@@ -53,7 +53,10 @@
         <td>{{ book.title }}</td>
         <td>{{ book.isbn }}</td>
         <td>
-          <div class="amount-input-container">
+          <div *ngIf="!isAdmin()">
+            {{ book.amount}}
+          </div>
+          <div *ngIf="isAdmin()" class="amount-input-container">
             <button
               class="amount-button"
               (click)="changeAmount(book.public_id, book.amount - 1, book.amount)"

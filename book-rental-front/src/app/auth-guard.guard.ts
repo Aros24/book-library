@@ -20,7 +20,7 @@ export class AuthGuard implements CanActivate {
     if (this.authService.isTokenValid() && isTokenValid) {
       const allowedRoles = route.data['roles'] as string[];
       if (allowedRoles && !allowedRoles.includes(userRole)) {
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/dashboard/books']);
         return false;
       }
       return true;
