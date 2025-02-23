@@ -1,6 +1,6 @@
 # Book-Library
 ## Summary
-Fullstack application for managing a book library. It allows you to create users, add books, book authors and borrow books. Users have two roles possible: basic and admin.
+This fullstack application is a university project for managing a book library. It allows you to create users, add books, book authors and borrow books. Users have two roles possible: basic and admin.
 It uses REST API for communication between frontend and backend, with JWT for authentication.
 
 ## Technologies Used
